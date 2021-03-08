@@ -1,37 +1,27 @@
-## Welcome to GitHub Pages
+# DatasMark
 
-You can use the [editor on GitHub](https://github.com/cuiwang/DatasMark/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+#### 介绍
+{**本工具用于NER中数据标注任务,支持自定义标注类型,此版本为基础版,功能比较单一,后续开发计划待定.}
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+#### 软件架构
+软件架构说明
+应用程序使用Electron打包而成,因此生成的应用程序较大,后续还是考虑继续开发Web版本.
 
-### Markdown
+#### 安装教程
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+1.  npm或yarn 安装依赖
+2.  npm或yarn run build:dir 生成绿色版本
+3.  npm或yarn run build 生成完整版本
 
-```markdown
-Syntax highlighted code block
+#### 使用说明
 
-# Header 1
-## Header 2
-### Header 3
+1.  node版本:8.9.3 ,14.16.0 ,15.10.0
+2.  vue版本: 2.5.16
+3. electron版本: 2.0.4
 
-- Bulleted
-- List
+#### 参与贡献
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/cuiwang/DatasMark/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+1.  Fork 本仓库
+2.  新建 Feat_xxx 分支
+3.  提交代码
+4.  新建 Pull Request
