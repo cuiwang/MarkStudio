@@ -42,7 +42,7 @@
                     active-text-color="#ffd04b">
                 <el-menu-item index="1">数据标注工具</el-menu-item>
                 <el-menu-item style="float: right"
-                ><a href="#" target="_blank">Beta v2.2.1 | WeChat@heiscuiwang</a></el-menu-item>
+                ><a href="#" target="_blank">Beta v2.3.1 | WeChat@heiscuiwang</a></el-menu-item>
             </el-menu>
         </el-header>
         <el-main>
@@ -50,23 +50,16 @@
                 <el-card shadow="never">
                     <div class="flex_row">
                         <div class="flex_1">
-                            <div style="font-size: 20px;color: #303133;text-align: left">实体标注 / 文本分类 / 关系标注</div>
+                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)</div>
                             <div class="h10"></div>
                             <div style="font-size: 14px;color: #909399;text-align: left">
-                                整理了关于数据标注工具的一些解释和提示.现阶段支持Windows/MacOS/Linux三种系统.本工具 <span class="maincolor">不需要联网</span> ,暂不支持自动更新.后续开发计划待定.
+                                功能优化升级需求,请添加作者微信: heiscuiwang
                             </div>
                         </div>
                     </div>
                 </el-card>
             </div>
             <div class="flex_row">
-                <div class="flex_1">
-                    <el-image
-                            style="width: 100%"
-                            src="./file/1.jpg"
-                            :preview-src-list="['./file/1.jpg','./file/2.jpg','./file/3.jpg']">
-                    </el-image>
-                </div>
                 <div class="flex_1">
                     <el-image
                             style="width: 100%"
@@ -81,12 +74,19 @@
                             :preview-src-list="['./file/1.jpg','./file/2.jpg','./file/3.jpg']">
                     </el-image>
                 </div>
+                <div class="flex_1">
+                    <el-image
+                            style="width: 100%"
+                            src="./file/1.jpg"
+                            :preview-src-list="['./file/1.jpg','./file/2.jpg','./file/3.jpg']">
+                    </el-image>
+                </div>
             </div>
             <div class="main">
                 <div class="download_item flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>Windows v2.2.1</span>
+                            <span>Windows v2.3.1</span>
                             <el-button @click="download('win')" style="float: right; padding: 3px 0" type="text">下载
                             </el-button>
                         </div>
@@ -96,7 +96,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('win')" ><div style="word-break: break-word">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.2.1-win.zip</div></el-link>
+                                    <el-link @click="download('win')" ><div style="word-break: break-word;height: 120px">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-win.zip</div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -128,7 +128,7 @@
                 <div class="download_item_center flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>MacOS v2.2.1</span>
+                            <span>MacOS v2.3.1</span>
                             <el-button @click="download('mac')" style="float: right; padding: 3px 0" type="text">下载</el-button>
                         </div>
                         <div class="download_item_content">
@@ -137,7 +137,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('mac')" ><div style="word-break: break-word">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.1.1-mac.zip</div></el-link>
+                                    <el-link @click="download('mac')" ><div style="word-break: break-word;height: 120px">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip</div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -177,7 +177,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('linux')" ><div style="word-break: break-word">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip</div></el-link>
+                                    <el-link @click="download('linux')" ><div style="word-break: break-word;height: 120px">      https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip      </div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -270,10 +270,7 @@
                             联系作者?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                            微信搜 "<span class="main_text_color bold_text">heiscuiwang</span>" 或 "<span
-                                class="main_text_color bold_text"
-                        >15399909477</span
-                        >"
+                            微信添加 "<span class="main_text_color bold_text">heiscuiwang</span>"
                         </div>
                     </el-card>
                 </div>
