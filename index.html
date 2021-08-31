@@ -96,7 +96,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('win')" ><div style="word-break: break-word;height: 120px">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.1-win.zip</div></el-link>
+                                    <el-link @click="download('win')" ><div style="word-break: break-word;height: 120px">{{win_url}}</div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -137,7 +137,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('mac')" ><div style="word-break: break-word;height: 120px">https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip</div></el-link>
+                                    <el-link @click="download('mac')" ><div style="word-break: break-word;height: 120px">{{mac_url}}</div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -177,7 +177,7 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('linux')" ><div style="word-break: break-word;height: 120px">      https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip      </div></el-link>
+                                    <el-link @click="download('linux')" ><div style="word-break: break-word;height: 120px">      {{linux_url}}      </div></el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -286,19 +286,23 @@
   new Vue({
     el: '#app',
     data: function() {
-      return {activeIndex: '1'};
+      return {activeIndex: '1',
+          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip',
+          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.1-win.zip',
+          linux_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip'
+      };
     },
     methods: {
       download(platform) {
         switch (platform) {
           case 'mac':
-            window.location.href = 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip';
+            window.location.href = this.mac_url;
             break;
           case 'win':
-            window.location.href = 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.1-win.zip';
+            window.location.href = this.win_url;
             break;
           case 'linux':
-            window.location.href = 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip';
+            window.location.href = this.linux_url;
             break;
             default:
               break;
