@@ -42,7 +42,7 @@
                     active-text-color="#ffd04b">
                 <el-menu-item index="1">数据标注工具</el-menu-item>
                 <el-menu-item style="float: right"
-                ><a href="#" target="_blank">Beta v2.3.1 | WeChat@heiscuiwang</a></el-menu-item>
+                ><a href="#" target="_blank">{{version}} | WeChat@heiscuiwang</a></el-menu-item>
             </el-menu>
         </el-header>
         <el-main>
@@ -53,7 +53,7 @@
                             <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)</div>
                             <div class="h10"></div>
                             <div style="font-size: 14px;color: #909399;text-align: left">
-                                最近更新(2021年8月31日):1.新增工程导入/导出 2.开放工程修改配置 3.修复已知BUG
+                                最近更新[{{version}}](2021年9月1日):1.开放编辑及删除功能 2.通过编辑项目修改标签组
                             </div>
                         </div>
                     </div>
@@ -86,7 +86,7 @@
                 <div class="download_item flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>Windows v2.4.1</span>
+                            <span>Windows {{version}}</span>
                             <el-button @click="download('win')" style="float: right; padding: 3px 0" type="text">下载
                             </el-button>
                         </div>
@@ -118,7 +118,7 @@
                                 </el-col>
                                 <el-col :span="14">
                                     <div style="word-break:break-word">
-                                        f227176be02c412df9484dd9ed2a9264307a6c3ec90a433ab850d5aaf81e0d87
+                                        {{win_sha256}}
                                     </div>
                                 </el-col>
                             </el-row>
@@ -206,6 +206,36 @@
                     </el-card>
                 </div>
             </div>
+            <div class="update" style="display: flex;flex-direction: column;">
+                <div style="margin: 20px;text-align: left">
+                    <el-card>
+                        <div class="title_text_size main_text_color">更新记录</div>
+                        <el-divider></el-divider>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            V2.4.2_Beta
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                           1.开放激活状态下的编辑及删除功能 2.通过编辑项目切换标签组
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            V2.4.1_Beta
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            1.解决windows系统下可能出现的卡顿问题
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            v2.3.1_Beta
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            1.新增项目导入/导出功能 2.修复已知BUG
+                        </div>
+                        <div class="separate_line"></div>
+
+                    </el-card>
+                </div>
+            </div>
             <div class="help" style="display: flex;flex-direction: column;">
                 <div style="margin: 20px;text-align: left">
                     <el-card>
@@ -287,8 +317,10 @@
     el: '#app',
     data: function() {
       return {activeIndex: '1',
+          version: 'V2.4.2_Beta',
+          win_sha256:'268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
           mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip',
-          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.1-win.zip',
+          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-win.zip',
           linux_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip'
       };
     },
