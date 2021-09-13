@@ -128,7 +128,7 @@
                 <div class="download_item_center flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>MacOS v2.3.1</span>
+                            <span>MacOS {{version}}</span>
                             <el-button @click="download('mac')" style="float: right; padding: 3px 0" type="text">下载</el-button>
                         </div>
                         <div class="download_item_content">
@@ -158,7 +158,7 @@
                                 </el-col>
                                 <el-col :span="14">
                                     <div style="word-break:break-word">
-                                        e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+                                        {{mac_sha256}}
                                     </div>
                                 </el-col>
                             </el-row>
@@ -319,8 +319,9 @@
       return {activeIndex: '1',
           version: 'V2.4.2_Beta',
           win_sha256:'268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
-          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.3.1-mac.zip',
+          mac_sha256:'b32a3ef3177bd8b1f1ea42f436aeddc0534ed07aafabbbc7a36d9f72f449fdfe',
           win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-win.zip',
+          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-mac.zip',
           linux_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip'
       };
     },
