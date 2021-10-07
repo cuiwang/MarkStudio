@@ -42,7 +42,7 @@
                     active-text-color="#ffd04b">
                 <el-menu-item index="1">数据标注工具</el-menu-item>
                 <el-menu-item style="float: right"
-                ><a href="#" target="_blank">{{version}} | WeChat@heiscuiwang</a></el-menu-item>
+                ><a href="#" target="_blank">{{ version }} | WeChat@heiscuiwang</a></el-menu-item>
             </el-menu>
         </el-header>
         <el-main>
@@ -50,10 +50,11 @@
                 <el-card shadow="never">
                     <div class="flex_row">
                         <div class="flex_1">
-                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)</div>
+                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)
+                                | <span class="danger_color bold_text">实体标注(支持)</span></div>
                             <div class="h10"></div>
                             <div style="font-size: 14px;color: #909399;text-align: left">
-                                最近更新[{{version}}](2021年9月1日):1.开放编辑及删除功能 2.通过编辑项目修改标签组
+                                最近更新[{{ version }}]({{ versionTime }}):1.新增对话标注 2.新增版本检测 3.解决已知问题
                             </div>
                         </div>
                     </div>
@@ -86,7 +87,7 @@
                 <div class="download_item flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>Windows {{version}}</span>
+                            <span>Windows {{ version }}</span>
                             <el-button @click="download('win')" style="float: right; padding: 3px 0" type="text">下载
                             </el-button>
                         </div>
@@ -96,7 +97,9 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('win')" ><div style="word-break: break-word;height: 120px">{{win_url}}</div></el-link>
+                                    <el-link @click="download('win')">
+                                        <div style="word-break: break-word;height: 120px">{{ win_url }}</div>
+                                    </el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -111,25 +114,15 @@
                                     </div>
                                 </el-col>
                             </el-row>
-                            <div class="h10"></div>
-                            <el-row>
-                                <el-col :span="8">
-                                    <div>SHA256:</div>
-                                </el-col>
-                                <el-col :span="14">
-                                    <div style="word-break:break-word">
-                                        {{win_sha256}}
-                                    </div>
-                                </el-col>
-                            </el-row>
                         </div>
                     </el-card>
                 </div>
                 <div class="download_item_center flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>MacOS v2.3.1</span>
-                            <el-button @click="download('mac')" style="float: right; padding: 3px 0" type="text">下载</el-button>
+                            <span>MacOS {{ version }}</span>
+                            <el-button @click="download('mac')" style="float: right; padding: 3px 0" type="text">下载
+                            </el-button>
                         </div>
                         <div class="download_item_content">
                             <el-row>
@@ -137,7 +130,9 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('mac')" ><div style="word-break: break-word;height: 120px">{{mac_url}}</div></el-link>
+                                    <el-link @click="download('mac')">
+                                        <div style="word-break: break-word;height: 120px">{{ mac_url }}</div>
+                                    </el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -148,17 +143,6 @@
                                 <el-col :span="14">
                                     <div>
                                         <el-link type="info" :underline="false">解压后运行</el-link>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                            <div class="h10"></div>
-                            <el-row>
-                                <el-col :span="8">
-                                    <div>SHA256:</div>
-                                </el-col>
-                                <el-col :span="14">
-                                    <div style="word-break:break-word">
-                                        {{mac_sha256}}
                                     </div>
                                 </el-col>
                             </el-row>
@@ -169,7 +153,8 @@
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>Linux v2.1.1</span>
-                            <el-button @click="download('linux')" style="float: right; padding: 3px 0" type="text">下载</el-button>
+                            <el-button @click="download('linux')" style="float: right; padding: 3px 0" type="text">下载
+                            </el-button>
                         </div>
                         <div class="download_item_content">
                             <el-row>
@@ -177,7 +162,9 @@
                                     <div>下载地址</div>
                                 </el-col>
                                 <el-col :span="14">
-                                    <el-link @click="download('linux')" ><div style="word-break: break-word;height: 120px">      {{linux_url}}      </div></el-link>
+                                    <el-link @click="download('linux')">
+                                        <div style="word-break: break-word;height: 120px"> {{ linux_url }}</div>
+                                    </el-link>
                                 </el-col>
                             </el-row>
                             <div class="h10"></div>
@@ -188,17 +175,6 @@
                                 <el-col :span="14">
                                     <div>
                                         <el-link type="info" :underline="false">解压后运行</el-link>
-                                    </div>
-                                </el-col>
-                            </el-row>
-                            <div class="h10"></div>
-                            <el-row>
-                                <el-col :span="8">
-                                    <div>SHA256</div>
-                                </el-col>
-                                <el-col :span="14">
-                                    <div style="word-break:break-word">
-                                        541f5a6e00b3998398084f407a1913df373eefe98a4a6196913c54a7816b7d68
                                     </div>
                                 </el-col>
                             </el-row>
@@ -212,10 +188,17 @@
                         <div class="title_text_size main_text_color">更新记录</div>
                         <el-divider></el-divider>
                         <div class="smalltitle_text_size main_text_color padding_10">
+                            V2.5.0_Beta
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            1.新增对话标注 2.新增版本检测 3.解决已知问题
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
                             V2.4.2_Beta
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                           1.开放激活状态下的编辑及删除功能 2.通过编辑项目切换标签组
+                            1.开放激活状态下的编辑及删除功能 2.通过编辑项目切换标签组
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
@@ -242,7 +225,24 @@
                         <div class="title_text_size main_text_color">高频问题整理</div>
                         <el-divider></el-divider>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            如何高效使用工具?
+                            0.怎样导入工程?
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            在工程管理页面下,选择需要导出(备份)的工程,点击导出按钮,在弹出的窗口中选择保存的位置,之后可以发给其他小伙伴导入使用.
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            1.导入工程后卡死?
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            win下删除类似路径下文件夹 <span class="bold_text">C:\Users\Master\AppData\Roaming\datasmark</span>
+                            <br/>
+                            mac下删除类似路径下文件夹 <span class="bold_text">/Users/Master/Library/Application Support/datasmark</span>
+
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            2.如何高效使用工具?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             在工作台中,使用 <span class="warning_color bold_text">[方向键]</span> 上下翻页.
@@ -251,7 +251,7 @@
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            如何自定义标注类型?
+                            3.如何自定义标注类型?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             切换到标注类型管理页面,点击新增按钮,按照一定的格式要求填写/插入内容.新增标记需要<span
@@ -261,7 +261,7 @@
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            新增项目没有标注类型选择?
+                            4.新增项目没有标注类型选择?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             首次打开需要初始化本地数据库,如果没有标注类型,可以尝试<span class="maincolor bold_text">切换一下页面</span
@@ -269,7 +269,7 @@
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            怎样使用自己的项目
+                            5.怎样使用自己的项目
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             在工作台或者项目管理页面,新增项目后再对话框中点击<span class="maincolor bold_text">确定按钮</span
@@ -280,7 +280,7 @@
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            标注进度如何计算?
+                            6.标注进度如何计算?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             标注进度 = ( 已标注 + 无法标注 ) / 总数 (注意:标注工作完成后,请点击完成按钮或者快捷键[CTRL+回车],否则<span
@@ -290,14 +290,14 @@
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            是否开源?
+                            7.是否开源?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                            <span class="main_text_color bold_text">开源</span>,本应用也是基于开源代码编写而成.
+                            <span class="main_text_color bold_text">开源</span>,本应用也是基于开源代码编写而成.目前测试阶段,代码还未优化.
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            联系作者?
+                            8.联系作者?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
                             微信添加 "<span class="main_text_color bold_text">heiscuiwang</span>"
@@ -316,13 +316,16 @@
   new Vue({
     el: '#app',
     data: function() {
-      return {activeIndex: '1',
-          version: 'V2.4.2_Beta',
-          win_sha256:'268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
-          mac_sha256:'b32a3ef3177bd8b1f1ea42f436aeddc0534ed07aafabbbc7a36d9f72f449fdfe',
-          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-win.zip',
-          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-mac.zip',
-          linux_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip'
+      return {
+        activeIndex: '1',
+        version: 'V2.5.0_Beta',
+        versionTime: '2021年10月7日',
+        versionInfo: '',
+        win_sha256: '268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
+        mac_sha256: 'b32a3ef3177bd8b1f1ea42f436aeddc0534ed07aafabbbc7a36d9f72f449fdfe',
+        win_url: 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.5.0-win.zip',
+        mac_url: 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.5.0-mac.zip',
+        linux_url: 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip',
       };
     },
     methods: {
@@ -337,8 +340,8 @@
           case 'linux':
             window.location.href = this.linux_url;
             break;
-            default:
-              break;
+          default:
+            break;
         }
       },
     },
