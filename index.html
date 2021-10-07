@@ -50,10 +50,10 @@
                 <el-card shadow="never">
                     <div class="flex_row">
                         <div class="flex_1">
-                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持) | <span class="danger_color bold_text">对话标注(新增)</span></div>
+                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)</div>
                             <div class="h10"></div>
                             <div style="font-size: 14px;color: #909399;text-align: left">
-                                最近更新[{{version}}]({{updateTime}}):{{updateInfo}}
+                                最近更新[{{version}}](2021年9月1日):1.开放编辑及删除功能 2.通过编辑项目修改标签组
                             </div>
                         </div>
                     </div>
@@ -128,7 +128,7 @@
                 <div class="download_item_center flex_1">
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>MacOS {{version}}</span>
+                            <span>MacOS v2.3.1</span>
                             <el-button @click="download('mac')" style="float: right; padding: 3px 0" type="text">下载</el-button>
                         </div>
                         <div class="download_item_content">
@@ -158,7 +158,7 @@
                                 </el-col>
                                 <el-col :span="14">
                                     <div style="word-break:break-word">
-                                        e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+                                        {{mac_sha256}}
                                     </div>
                                 </el-col>
                             </el-row>
@@ -211,13 +211,6 @@
                     <el-card>
                         <div class="title_text_size main_text_color">更新记录</div>
                         <el-divider></el-divider>
-                        <div class="smalltitle_text_size main_text_color padding_10">
-                            V2.5.0_Beta
-                        </div>
-                        <div class="normal_text_size normal_text_color padding_10">
-                            1.新增对话标注 2.新增版本检测
-                        </div>
-                        <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
                             V2.4.2_Beta
                         </div>
@@ -300,7 +293,7 @@
                             是否开源?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                            <span class="main_text_color bold_text">开源</span>,本应用也是基于开源代码编写而成.目前还在测试阶段,代码整理完毕后进行更新.
+                            <span class="main_text_color bold_text">开源</span>,本应用也是基于开源代码编写而成.
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
@@ -324,12 +317,11 @@
     el: '#app',
     data: function() {
       return {activeIndex: '1',
-          updateInfo:'1.新增对话标注 2.新增版本检测',
-          updateTime:'2021.10.07',
-          version: 'V2.5.0_Beta',
+          version: 'V2.4.2_Beta',
           win_sha256:'268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
-          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.5.0-mac.zip',
-          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.5.0-win.zip',
+          mac_sha256:'b32a3ef3177bd8b1f1ea42f436aeddc0534ed07aafabbbc7a36d9f72f449fdfe',
+          win_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-win.zip',
+          mac_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.4.2-mac.zip',
           linux_url:'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/linux.zip'
       };
     },
