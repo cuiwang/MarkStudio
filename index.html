@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>数据标注工具</title>
+    <title>中文数据标注工具</title>
     <!--icon-->
     <link rel="icon" type="image/png" sizes="256x256" href="file/icon.png"/>
     <!-- 引入样式 -->
@@ -40,7 +40,7 @@
                     background-color="#545c64"
                     text-color="#fff"
                     active-text-color="#ffd04b">
-                <el-menu-item index="1">数据标注工具</el-menu-item>
+                <el-menu-item index="1">开源_中文_数据标注_工具</el-menu-item>
                 <el-menu-item style="float: right"
                 ><a href="#" target="_blank">{{ version }} | WeChat@heiscuiwang</a></el-menu-item>
             </el-menu>
@@ -50,11 +50,15 @@
                 <el-card shadow="never">
                     <div class="flex_row">
                         <div class="flex_1">
-                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持)
-                                 <span class="danger_color bold_text">对话标注(新增)</span></div>
+                            <div style="font-size: 18px;color: #303133;text-align: left">实体标注(支持) | 文本分类(支持) | 关系标注(支持) |
+                                <span class="danger_color bold_text">对话标注(新增)</span></div>
                             <div class="h10"></div>
                             <div style="font-size: 14px;color: #909399;text-align: left">
                                 最近更新[{{ version }}]({{ versionTime }}):{{versionInfo}}
+                            </div>
+                            <div class="h10"></div>
+                            <div style="font-size: 14px;color: #909399;text-align: left">
+                                下版本计划内容:{{nextVersionInfo}}
                             </div>
                         </div>
                     </div>
@@ -305,14 +309,25 @@
                             7.是否开源?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                            <span class="main_text_color bold_text">开源</span>,本应用也是基于开源代码编写而成.目前测试阶段,代码还未优化.
+                            <span class="main_text_color bold_text">源码托管地址: https://github.com/cuiwang/DatasMark </span>,本应用也是基于开源代码编写而成.目前出于测试阶段,代码还未优化,,版本间可能变化较大,请谨慎使用.
                         </div>
                         <div class="separate_line"></div>
                         <div class="smalltitle_text_size main_text_color padding_10">
-                            8.联系作者?
+                            8.工具出现问题,数据无法导出怎么办?
                         </div>
                         <div class="normal_text_size normal_text_color padding_10">
-                            微信添加 "<span class="main_text_color bold_text">heiscuiwang</span>"
+                            热心网友提供小技巧:
+                            win下将软件数据存储目录( <span class="bold_text">C:\Users\Master\AppData\Roaming\datasmark</span>)移动到其他"电脑"类似目录下,实现手动切换"底层"数据,再进行导出.
+                            <br/>
+                            mac下同理( <span class="bold_text">/Users/Master/Library/Application Support/datasmark</span>).
+
+                        </div>
+                        <div class="separate_line"></div>
+                        <div class="smalltitle_text_size main_text_color padding_10">
+                            9.如何提交需求和Bug?
+                        </div>
+                        <div class="normal_text_size normal_text_color padding_10">
+                            微信添加 "<span class="main_text_color bold_text">heiscuiwang</span>",作者将免费,优先处理您的请求.
                         </div>
                     </el-card>
                 </div>
@@ -333,6 +348,7 @@
         version: 'V2.5.2_Beta',
         versionTime: '2022年03月21日',
         versionInfo: '1.新增对话标注 2.修复标签过长引起的问题 3.优化细节并提升性能',
+        nextVersionInfo:'1.基础功能维护 2.新增文本翻译标注功能 3.释放Web端服务',
         win_sha256: '268fbd10a7e9c1ca5870ec224243350b13daa74863ce5a1ad56fe05ead18a8a6',
         mac_sha256: 'b32a3ef3177bd8b1f1ea42f436aeddc0534ed07aafabbbc7a36d9f72f449fdfe',
         win_url: 'https://file66.oss-cn-shenzhen.aliyuncs.com/datasmark/%E6%95%B0%E6%8D%AE%E6%A0%87%E6%B3%A8%E5%B7%A5%E5%85%B7-2.5.2-win.zip',
