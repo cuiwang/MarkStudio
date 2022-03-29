@@ -1,13 +1,12 @@
 import { app, Menu, BrowserWindow } from 'electron';
-//import autoUpdater from './update.js';
+//引入update.js
+import { updateHandle } from '../update';
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
 if (process.env.NODE_ENV !== 'development') {
-  global.__static = require('path')
-    .join(__dirname, '/static')
-    .replace(/\\/g, '\\\\');
+  global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\');
 }
 
 let mainWindow;
@@ -27,14 +26,24 @@ function createWindow() {
     show: false,
     minWidth: 1024,
     minHeight: 768,
-    //frame: false,
+    //frame: false,//取消window自带的关闭最小化等
+    //resizable: false, //禁止改变主窗口尺寸
     title: '数据标注工具',
     useContentSize: true,
+    webPreferences: {
+      plugins: true,
+      nativeWindowOpen: true, // ADD THIS
+      webSecurity: false,
+      nodeIntegration: true,
+    },
   });
   mainWindow.maximize();
-  mainWindow.show();
-
+  //mainWindow.show();
   mainWindow.loadURL(winURL);
+
+  mainWindow.on('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -42,11 +51,12 @@ function createWindow() {
 }
 
 app.on('ready', async () => {
-  // 这里只在生产环境才执行版本检测。
-  /* if (process.env.NODE_ENV === 'production') {
-    autoUpdater.checkForUpdates();
-  }*/
   createWindow();
+  // 这里只在生产环境才执行版本检测。
+  if (process.env.NODE_ENV === 'production') {
+    //检测版本更新
+    updateHandle(mainWindow);
+  }
 });
 
 app.on('window-all-closed', () => {

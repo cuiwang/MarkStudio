@@ -22,26 +22,30 @@
           如何高效使用工具?
         </div>
         <div class="normal_text_size normal_text_color padding_10">
-          在工作台中,使用 <span class="warning_color bold_text">[方向键]</span> 上下翻页.
-          <span class="warning_color bold_text">[CTRL+回车键]</span>
-          提交完成.再次点击已标注文本将执行删除标注,在工作台右侧可以批量清空标注,也可单独删除标注.
+          在工作台中,使用 <span class="warning_color bold_text">[CTRL+方向键]</span> 上下翻页.
+          <span class="warning_color bold_text">[CTRL+回车键]</span>提交完成.
+          <span class="warning_color bold_text">[[数字1-9]</span
+          >选中文本，按下标注类型对应数字，快速标注，例如选择的标注类型里面有3种，那么就对应数字1-3.
+          <span class="warning_color bold_text">再次点击已标注文本</span
+          >将执行删除标注,在工作台右侧可以批量清空标注,也可单独删除标注等.其他快捷键请查看快捷键列表功能模块。
         </div>
         <div class="separate_line"></div>
         <div class="smalltitle_text_size main_text_color padding_10">
-          如何自定义标注类型?
+          如何自定义实体标注标签组?
         </div>
         <div class="normal_text_size normal_text_color padding_10">
-          切换到标注类型管理页面,点击新增按钮,按照一定的格式要求填写/插入内容.新增标记需要<span
+          切换到实体标注标签组管理页面,点击新增按钮,按照一定的格式要求填写/插入内容.新增标记需要<span
             class="danger_color bold_text"
             >点击红色新增按钮</span
           >才能正确添加上.点击列表左侧箭头,可以展开预览页面.
         </div>
         <div class="separate_line"></div>
         <div class="smalltitle_text_size main_text_color padding_10">
-          新增项目没有标注类型选择?
+          新增项目没有实体标注标签组选择?
         </div>
         <div class="normal_text_size normal_text_color padding_10">
-          首次打开需要初始化本地数据库,如果没有标注类型,可以尝试<span class="maincolor bold_text">切换一下页面</span
+          首次打开需要初始化本地数据库,如果没有实体标注标签组,可以尝试<span class="maincolor bold_text"
+            >切换一下页面</span
           >(如切换到项目管理页面),或重启应用试试.
         </div>
         <div class="separate_line"></div>
@@ -60,7 +64,7 @@
           标注进度如何计算?
         </div>
         <div class="normal_text_size normal_text_color padding_10">
-          标注进度 = ( 已标注 + 无法标注 ) / 总数 (注意:标注工作完成后,请点击完成按钮或者快捷键[CTRL+回车],否则<span
+          标注进度 = ( 已标注 + 无效数据 ) / 总数 (注意:标注工作完成后,请点击完成按钮或者快捷键[CTRL+回车],否则<span
             class="danger_color bold_text"
             >无法计算进度</span
           >)

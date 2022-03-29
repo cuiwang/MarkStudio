@@ -7,6 +7,9 @@ import date_utils from './date_utils';
 
 // ────────────────────────── consts ──────────────────────────
 const MARK_TYPES_DB = 'MARK_TYPES_DB';
+const GLOBAL_TYPES_DB = 'GLOBAL_TYPES_DB';
+const RELATION_TYPES_DB = 'RELATION_TYPES_DB';
+const DIALOGUE_TYPES_DB = 'DIALOGUE_TYPES_DB';
 const PROJECTS_DB = 'PROJECTS_DB';
 const DATAS_DB = 'DATAS_DB';
 
@@ -36,6 +39,15 @@ function insert(dbname, newDoc, cb) {
     case MARK_TYPES_DB:
       db.marktypes.insert(newDoc, cb);
       break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.insert(newDoc, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.insert(newDoc, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.insert(newDoc, cb);
+      break;
     case PROJECTS_DB:
       db.projects.insert(newDoc, cb);
       break;
@@ -53,6 +65,15 @@ function update(dbname, query, updateQuery, options, cb) {
   switch (dbname) {
     case MARK_TYPES_DB:
       db.marktypes.update(query, updateQuery, options, cb);
+      break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.update(query, updateQuery, options, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.update(query, updateQuery, options, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.update(query, updateQuery, options, cb);
       break;
     case PROJECTS_DB:
       db.projects.update(query, updateQuery, options, cb);
@@ -72,6 +93,15 @@ function update_set(dbname, query, updateQuery, options, cb) {
     case MARK_TYPES_DB:
       db.marktypes.update(query, updateQuery, options, cb);
       break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.update(query, updateQuery, options, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.update(query, updateQuery, options, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.update(query, updateQuery, options, cb);
+      break;
     case PROJECTS_DB:
       db.projects.update(query, updateQuery, options, cb);
       break;
@@ -87,6 +117,15 @@ function remove(dbname, query, options, cb) {
   switch (dbname) {
     case MARK_TYPES_DB:
       db.marktypes.remove(query, options, cb);
+      break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.remove(query, options, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.remove(query, options, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.remove(query, options, cb);
       break;
     case PROJECTS_DB:
       db.projects.remove(query, options, cb);
@@ -104,6 +143,15 @@ function find(dbname, query, cb) {
     case MARK_TYPES_DB:
       db.marktypes.find(query, cb);
       break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.find(query, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.find(query, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.find(query, cb);
+      break;
     case PROJECTS_DB:
       db.projects.find(query, cb);
       break;
@@ -120,6 +168,15 @@ function findOne(dbname, query, cb) {
     case MARK_TYPES_DB:
       db.marktypes.findOne(query, cb);
       break;
+    case GLOBAL_TYPES_DB:
+      db.globaltypes.findOne(query, cb);
+      break;
+    case RELATION_TYPES_DB:
+      db.relationtypes.findOne(query, cb);
+      break;
+    case DIALOGUE_TYPES_DB:
+      db.dialoguetypes.findOne(query, cb);
+      break;
     case PROJECTS_DB:
       db.projects.findOne(query, cb);
       break;
@@ -135,6 +192,12 @@ function generate_find(dbname, query) {
   switch (dbname) {
     case MARK_TYPES_DB:
       return db.marktypes.find(query);
+    case GLOBAL_TYPES_DB:
+      return db.globaltypes.find(query);
+    case RELATION_TYPES_DB:
+      return db.relationtypes.find(query);
+    case DIALOGUE_TYPES_DB:
+      return db.dialoguetypes.find(query);
     case PROJECTS_DB:
       return db.projects.find(query);
     case DATAS_DB:
@@ -146,6 +209,9 @@ function generate_find(dbname, query) {
 
 export default {
   MARK_TYPES_DB,
+  GLOBAL_TYPES_DB,
+  RELATION_TYPES_DB,
+  DIALOGUE_TYPES_DB,
   PROJECTS_DB,
   DATAS_DB,
   insert,

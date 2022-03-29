@@ -1,46 +1,39 @@
 <template>
   <div>
-    <el-dialog
-      title="新建项目"
-      :visible.sync="showDialog"
-      :show-close="false"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
-      <el-form ref="projectForm" :model="projectForm" label-width="100px">
+    <el-dialog title="新建项目" :visible.sync="showDialog" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
+      <el-form ref="projectForm" :model="projectForm" label-width="140px">
         <el-form-item label="项目名称" required>
-          <el-input
-            v-model="projectForm.name"
-            clearable
-            :maxlength="10"
-            show-word-limit
-            placeholder="请输入项目名称"
-          ></el-input>
+          <el-input v-model="projectForm.name" clearable :maxlength="10" show-word-limit placeholder="请输入项目名称"></el-input>
         </el-form-item>
-        <el-form-item label="描述">
-          <el-input
-            type="textarea"
-            clearable
-            v-model="projectForm.description"
-            placeholder="请填写描述,方便理解和解释"
-            maxlength="200"
-            show-word-limit
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="标注类型" required>
-          <el-select
-            v-model="projectForm.markTypeId"
-            @change="onMarkTypeChanged"
-            placeholder="请选择标注类型,自定义标注请在对应管理页面配置"
-          >
-            <el-option
-              v-for="(markType, index) in markTypeDatas"
-              :key="index"
-              :label="`${markType.name} : ${markType.content}`"
-              :value="markType._id"
-            ></el-option>
+        <el-form-item label="实体标注标签组" required>
+          <el-select v-model="projectForm.markTypeId" @change="onMarkTypeChanged" placeholder="请选择实体标注标签组,自定义标注请在对应管理页面配置">
+            <el-option v-for="(markType, index) in markTypeDatas" :key="index" :label="`${markType.content}`" :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="描述">
+          <el-input clearable v-model="projectForm.description" placeholder="请填写描述,方便理解和解释" maxlength="50" show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="文本分类标签组">
+          <el-select v-model="projectForm.globalTypeId" @change="onGlobalTypeChanged" placeholder="下拉选择需要的文本分类标签组">
+            <el-option v-for="(markType, index) in globalTypeDatas" :key="index" :label="`${markType.content}`" :value="markType._id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="关系标注标签组">
+          <el-select v-model="projectForm.relationTypeId" @change="onRelationTypeChanged" placeholder="下拉选择需要的关系标注标签组">
+            <el-option v-for="(markType, index) in relationTypeDatas" :key="index" :label="`${markType.content}`" :value="markType._id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="对话标注标签组">
+          <el-select v-model="projectForm.dialogueTypeId" @change="onDialogueTypeChanged" placeholder="下拉选择需要的对话标注标签组">
+            <el-option v-for="(markType, index) in dialogueTypeDatas" :key="index" :label="`${markType.content}`" :value="markType._id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="字符集选择">
+          <el-select v-model="encoding" @change="onEncodingChanged" placeholder="默认字符集utf-8">
+            <el-option v-for="(encode, index) in encodings" :key="index" :label="encode" :value="encode"></el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="数据文件" required v-loading="isReadingFile">
           <el-upload
             action="/"
@@ -55,22 +48,23 @@
             :multiple="false"
           >
             <div class="flex_row align_center">
-              <el-button size="small" type="danger">点击上传txt数据</el-button>
+              <el-button size="small" type="info">点击上传txt数据</el-button>
               <span class="w20"></span>
-              <span slot="tip" class="el-upload__tip"
-                >只能上传txt文件，<span style="font-weight: bold">按utf-8编码格式,按行</span>读取txt数据</span
-              >
+              <span slot="tip" class="el-upload__tip">
+                只能上传txt文件，中文乱码请修改上面字符集.
+                <span style="font-weight: bold">按行</span>
+                读取txt数据
+              </span>
             </div>
           </el-upload>
         </el-form-item>
         <el-form-item v-if="uploadOriginalDatas.length" label="数据预览">
           <div class="file_upload_tips">
-            解析成功!总共 <span style="font-weight: bold">{{ uploadOriginalDatas.length }}</span>
+            解析成功!总共
+            <span style="font-weight: bold">{{ uploadOriginalDatas.length }}</span>
             条数据.前5条:
           </div>
-          <div style="overflow:hidden;text-overflow:ellipsis;" v-for="(item, index) in uploadOriginalDatas.slice(0, 5)">
-            {{ index + 1 }} . {{ item }}
-          </div>
+          <div style="overflow:hidden;text-overflow:ellipsis;" v-for="(item, index) in uploadOriginalDatas.slice(0, 5)">{{ index + 1 }} . {{ item }}</div>
         </el-form-item>
       </el-form>
       <div class="separate_line"></div>
@@ -107,17 +101,26 @@ export default {
         num: {
           total: 0,
           marked: 0,
-          marking: 0,
-          wrong: 0,
         },
         markTypeId: '',
         markTypeName: '',
+        globalTypeId: '',
+        globalTypeName: '',
+        relationTypeId: '',
+        relationTypeName: '',
+        dialogueTypeId: '',
+        dialogueTypeName: '',
         description: '',
         working: false, //当前状态是否工作中/
       },
+      encoding: 'utf-8',
+      encodings: ['utf8', 'utf16le', 'binary', 'base64', 'hex', 'ascii'],
       fileList: [], //上传组件,文件预览
       isReadingFile: false, //是否正在解析文件
-      markTypeDatas: [], //从数据库中读取的标注类型列表
+      markTypeDatas: [], //从数据库中读取的实体标注标签组列表
+      globalTypeDatas: [], //从数据库中读取的文本分类标签组列表
+      relationTypeDatas: [], //从数据库中读取的关系标注标签组列表
+      dialogueTypeDatas: [], //从数据库中读取的对话标注标签组列表
       uploadOriginalDatas: [], // 按行解析完,存入数组,准备处理
     };
   },
@@ -128,6 +131,15 @@ export default {
   methods: {
     initEvent() {
       this.$events.on('MARKTYPE_CHANGED', (text) => {
+        this.initData();
+      });
+      this.$events.on('GLOBALTYPE_CHANGED', (text) => {
+        this.initData();
+      });
+      this.$events.on('RELATIONTYPE_CHANGED', (text) => {
+        this.initData();
+      });
+      this.$events.on('DIALOGUESETTING_CHANGED', (text) => {
         this.initData();
       });
     },
@@ -148,7 +160,7 @@ export default {
         this.showMessageWithText('请填写项目名称');
         return false;
       } else if (!this.projectForm.markTypeId) {
-        this.showMessageWithText('请选择标注类型');
+        this.showMessageWithText('请选择实体标注标签组');
         return false;
       } else if (!this.projectForm.dataFilePath && this.uploadOriginalDatas.length <= 0) {
         this.showMessageWithText('请按要求上传数据文件');
@@ -167,7 +179,10 @@ export default {
         this.uploadOriginalDatas = [];
 
         //创建文件流
-        const readstream = fs.createReadStream(path);
+        const readstream = fs.createReadStream(path, {
+          autoClose: true, //默认读取完毕后自动关闭
+          encoding: this.encoding,
+        });
         //创建逐行读取
         const rl = readline.createInterface({
           input: readstream,
@@ -184,8 +199,7 @@ export default {
     // ────────────────────────── 选择文件上传组件 ──────────────────────────
     handleExceed(files, fileList) {
       this.$message({
-        message: `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length +
-          fileList.length} 个文件`,
+        message: `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`,
         type: 'warning',
         offset: 70,
       });
@@ -201,16 +215,62 @@ export default {
           this.markTypeDatas.unshift(document);
         }
       });
+      db_utils.find(db_utils.GLOBAL_TYPES_DB, {}, (err, documents) => {
+        this.globalTypeDatas = [];
+        for (const document of documents) {
+          this.globalTypeDatas.unshift(document);
+        }
+      });
+      db_utils.find(db_utils.RELATION_TYPES_DB, {}, (err, documents) => {
+        this.relationTypeDatas = [];
+        for (const document of documents) {
+          this.relationTypeDatas.unshift(document);
+        }
+      });
+      db_utils.find(db_utils.DIALOGUE_TYPES_DB, {}, (err, documents) => {
+        this.dialogueTypeDatas = [];
+        for (const document of documents) {
+          this.dialogueTypeDatas.unshift(document);
+        }
+      });
     },
     // ────────────────────────── 分割线 ──────────────────────────
-    // 选择标注类型
+    // 选择实体标注标签组
     onMarkTypeChanged(_markTypeId) {
       // 通过id获取name
       db_utils.findOne(db_utils.MARK_TYPES_DB, { _id: _markTypeId }, (err, document) => {
         if (document) {
-          this.projectForm.markTypeName = document.name;
+          this.projectForm.markTypeName = document.content;
         }
       });
+    },
+    onGlobalTypeChanged(_globalTypeId) {
+      // 通过id获取name
+      db_utils.findOne(db_utils.GLOBAL_TYPES_DB, { _id: _globalTypeId }, (err, document) => {
+        if (document) {
+          this.projectForm.globalTypeName = document.content;
+        }
+      });
+    },
+    onRelationTypeChanged(_relationTypeId) {
+      // 通过id获取name
+      db_utils.findOne(db_utils.RELATION_TYPES_DB, { _id: _relationTypeId }, (err, document) => {
+        if (document) {
+          this.projectForm.relationTypeName = document.content;
+        }
+      });
+    },
+    onDialogueTypeChanged(_dialogueTypeId) {
+      // 通过id获取name
+      db_utils.findOne(db_utils.DIALOGUE_TYPES_DB, { _id: _dialogueTypeId }, (err, document) => {
+        if (document) {
+          this.projectForm.dialogueTypeName = document.content;
+        }
+      });
+    },
+    // 修改字符集
+    onEncodingChanged(_encoding) {
+      this.encoding = _encoding;
     },
 
     // 保存数据到数据库
@@ -220,10 +280,17 @@ export default {
       this.uploadOriginalDatas.forEach((content, index) => {
         datas.push({
           project_id: project_id,
-          index: index,
-          content: content,
-          status: 0,
-          tags: [],
+          index: index, //索引
+          content: content, //内容
+          wrong: 0, //是否无法标注
+          status: 0, //0标注中 1已完成
+          tags: [], //实体标注
+          relations: [], //关系标注
+          dialogue: {
+            separator: '',
+            datas: [],
+          }, //对话标注
+          globalTypeId: '', //全局标注
         });
       });
       db_utils.insert(db_utils.DATAS_DB, datas, (err, documents) => {
@@ -240,7 +307,7 @@ export default {
         // save to db
         // 保存到数据库
 
-        // 1.保存数据 得到项目id , 得到标注类型名称 2.保存项目
+        // 1.保存数据 得到项目id , 得到实体标注标签组名称 2.保存项目
         this.projectForm.num.total = this.uploadOriginalDatas.length; // 设置总数
         db_utils.insert(db_utils.PROJECTS_DB, this.projectForm, (err, newDoc) => {
           //console.log('project new:');

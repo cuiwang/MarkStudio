@@ -2156,12 +2156,15 @@ var Highlight = function (_BaseElement) {
       this.removeAllRectangle();
       this.lineMap.forEach(function (line) {
         var type = line.meta.type || _this3.type;
+        _this3.option.highlightColor = line.meta.fillColor || _this3.option.highlightColor;
+        _this3.option.tagColor = line.meta.fillColor || _this3.option.tagColor;
         line.points.forEach(function (points, index) {
           if (type === NoteType.UNDERLINE) {
             _this3.element.appendChild(_this3.createLine(points));
           } else {
             _this3.element.appendChild(_this3.createRectangle(points));
           }
+          // 如果设置了tag,就渲染tag
           if (line.points.length - 1 === index && line.meta && line.meta.tag) {
             var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             text.setAttribute('x', points[2][0] - 5);
