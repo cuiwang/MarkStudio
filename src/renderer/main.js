@@ -7,6 +7,12 @@ import App from './App.vue';
 import router from './router';
 import db from './libs/datastore';
 import EventEmitter from 'events';
+import * as dayjs from 'dayjs'
+import * as relativeTime from 'dayjs/plugin/relativeTime' // import plugin
+import 'dayjs/locale/zh-cn' // import locale
+
+dayjs.extend(relativeTime) // use plugin
+dayjs.locale('zh-cn') // use locale
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'));
 Vue.use(ElementUI);

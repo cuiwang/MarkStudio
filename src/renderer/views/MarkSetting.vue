@@ -4,15 +4,17 @@
       <el-card shadow="never">
         <div class="flex_row">
           <div class="flex_1">
-            <div style="font-size: 20px;color: #303133;text-align: left">实体标注标签组管理</div>
+            <div style="font-size: 20px; color: #303133; text-align: left">实体标注标签组管理</div>
             <div class="h10"></div>
-            <div style="font-size: 14px;color: #909399;text-align: left">
-              预制了常用的两种序列实体标注标签组：BIO标注法和BIOES标注法。其他类型需要自定义.
-            </div>
+            <div style="font-size: 14px; color: #909399; text-align: left">预制了常用的两种序列实体标注标签组：BIO标注法和BIOES标注法。其他类型需要自定义.</div>
           </div>
           <div class="w10"></div>
           <div>
-            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建实体标注标签组</el-button>
+            <el-button type="" @click="onExportMarksClick" icon="el-icon-s-promotion">导出标签组</el-button>
+          </div>
+          <div class="w10"></div>
+          <div>
+            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建标签组</el-button>
           </div>
         </div>
       </el-card>
@@ -26,7 +28,7 @@
               <el-form-item label="预览:">
                 <span v-for="(data, index) in props.row.datas" :key="index" class="margin_0_10">
                   <el-tooltip effect="dark" :content="data.name" placement="top">
-                    <el-tag :color="data.color" effect="dark">{{ data.tag }}</el-tag>
+                    <el-tag :color="data.color" effect="dark">{{ getMaxString(data.tag) }}</el-tag>
                   </el-tooltip>
                 </span>
               </el-form-item>
@@ -55,9 +57,9 @@
         <el-form-item label="标签:">
           <el-row :gutter="20">
             <el-col :span="8" :key="index" v-for="(tag, index) in newMarkTypeForm.datas">
-              <div class="flex_row align_center">
-                <el-tag :color="tag.color" size="medium" effect="dark" closable :disable-transitions="false" @close="handleNewMarkTypeTagClose(tag, index)">
-                  {{ tag.tag }}
+              <div class="flex_row align_center" style=";padding: 5px">
+                <el-tag class="flex_1" :color="tag.color" size="medium" effect="dark" closable :disable-transitions="false" @close="handleNewMarkTypeTagClose(tag, index)">
+                  {{ getMaxString(tag.tag) }}
                 </el-tag>
                 <el-color-picker size="medium" v-model="tag.color" show-alpha :predefine="predefineColors"></el-color-picker>
               </div>
@@ -138,6 +140,7 @@
 
 <script>
 import db_utils from '../libs/db_utils';
+import FileSaver from 'file-saver';
 
 export default {
   name: 'MarkSetting',
@@ -175,12 +178,12 @@ export default {
       },
       color: 'rgba(255, 69, 0, 0.68)',
       predefineColors: [
+        '#1e90ff',
         '#ff4500',
         '#ff8c00',
         '#ffd700',
         '#90ee90',
         '#00ced1',
-        '#1e90ff',
         '#c71585',
         'rgba(255, 69, 0, 0.68)',
         'rgb(255, 120, 0)',
@@ -190,15 +193,21 @@ export default {
         'hsla(209, 100%, 56%, 0.73)',
         '#c7158577',
       ],
+      isSaving: false,
     };
   },
   mounted() {
     console.log('MarkSetting nounted');
 
+    this.$events.on('MARKTYPE_CHANGED', (text) => {
+      this.initData();
+    });
+
     this.initData();
   },
   methods: {
     initData() {
+      this.tableData = [];
       db_utils
         .generate_find(db_utils.MARK_TYPES_DB, {})
         .sort({ editable: 1 })
@@ -210,6 +219,10 @@ export default {
     },
 
     // ────────────────────────── 分割线 ──────────────────────────
+    // 设置最大显示长度的字符串
+    getMaxString(str) {
+      return str.length > 6 ? str.substring(0, 5) + '...' : str
+    },
     clearNewMarkTypeForm() {
       this.newMarkTypeForm = {
         editable: true,
@@ -356,6 +369,54 @@ export default {
       this.editMarkTypeForm = JSON.parse(JSON.stringify(row));
       this.editMarkTypeForm._index = index;
       this.needShowEditMarkTypeView = true;
+    },
+    // 点击导出标签组
+    onExportMarksClick() {
+      this.saveJson();
+    },
+    saveJson() {
+      this.$notify({
+        title: '导出JSON',
+        message: '正在导出,请稍后...',
+        type: 'success',
+      });
+      if (this.isSaving) {
+        this.$notify({
+          title: '导出JSON',
+          message: '正在导出,请稍后...',
+          type: 'success',
+        });
+        return;
+      }
+      this.isSaving = true;
+
+      let _jsonData = {
+        type: 'entity',
+        content: [],
+      };
+
+      this.tableData.forEach((item) => {
+        _jsonData.content.push({
+          status: '1',
+          name: item['name'],
+          content: item['content'],
+          description: item['description'],
+          datas: item['datas'],
+        });
+      });
+
+      // 将json转换成字符串
+      const data = JSON.stringify(_jsonData);
+      const blob = new Blob([data], { type: '' });
+      this.$notify({
+        title: '导出JSON',
+        message: '导出成功!',
+        type: 'success',
+      });
+      FileSaver.saveAs(blob, '导出的实体标签组.json');
+      this.isSaving = false;
+
+      this.$emit('cancelButtonClick');
     },
   },
 };

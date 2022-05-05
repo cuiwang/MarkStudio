@@ -15,7 +15,7 @@ const DATAS_DB = 'DATAS_DB';
 
 // ────────────────────────── global ──────────────────────────
 function addTimeProperty(newDoc, isCreate = true) {
-  const now = date_utils.dateStr(new Date(), 'yyyy-MM-dd HH:mm:ss');
+  const now = date_utils.dateNow();
   if (Array.isArray(newDoc)) {
     newDoc.forEach((data) => {
       data.updated_at = now;
@@ -87,7 +87,7 @@ function update(dbname, query, updateQuery, options, cb) {
 }
 
 function update_set(dbname, query, updateQuery, options, cb) {
-  updateQuery.$set.updated_at = date_utils.dateStr(new Date(), 'yyyy-MM-dd HH:mm:ss');
+  updateQuery.$set.updated_at = date_utils.dateNow();
   options = options || { multi: false, upsert: false };
   switch (dbname) {
     case MARK_TYPES_DB:
@@ -163,6 +163,11 @@ function find(dbname, query, cb) {
   }
 }
 
+function find_datas_by_sort(query,  cb) {
+  db.datas.find(query).sort({index:-1}).exec(cb);
+
+}
+
 function findOne(dbname, query, cb) {
   switch (dbname) {
     case MARK_TYPES_DB:
@@ -207,6 +212,25 @@ function generate_find(dbname, query) {
   }
 }
 
+function count(dbname,query,cb) {
+  switch (dbname) {
+    case MARK_TYPES_DB:
+      return db.marktypes.count(query,cb);
+    case GLOBAL_TYPES_DB:
+      return db.globaltypes.count(query,cb);
+    case RELATION_TYPES_DB:
+      return db.relationtypes.count(query,cb);
+    case DIALOGUE_TYPES_DB:
+      return db.dialoguetypes.count(query,cb);
+    case PROJECTS_DB:
+      return db.projects.count(query,cb);
+    case DATAS_DB:
+      return db.datas.count(query,cb);
+    default:
+      break;
+  }
+}
+
 export default {
   MARK_TYPES_DB,
   GLOBAL_TYPES_DB,
@@ -221,4 +245,6 @@ export default {
   find,
   findOne,
   generate_find,
+  find_datas_by_sort,
+  count
 };

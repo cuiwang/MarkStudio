@@ -54,6 +54,21 @@ $warning_color: #E6A23C;
   color: #E6A23C;
 }
 
+.green_dot{
+  width: 10px;
+  height: 10px;
+  background: #67C23A;
+  border-radius: 50%;
+  margin: 5px;
+}
+.gray_dot{
+  width: 10px;
+  height: 10px;
+  background: #909399;
+  border-radius: 50%;
+  margin: 5px;
+}
+
 $main_text_color: #303133;
 $normal_text_color: #606266;
 $description_text_color: #909399;

@@ -269,8 +269,8 @@ function getClickWordsPosition(pElement, x, y) {
                 top: textRect.top - margin,
                 height: lineHeight,
                 bottom: textRect.bottom + margin,
-                left: textRect.left - 5,
-                right: textRect.right - 5,
+                left: textRect.left,
+                right: textRect.right,
                 width: textRect.width
               }));
             }
@@ -652,15 +652,30 @@ function rectToPointArray(rect, offset, margin) {
   var points = [];
   if (rect.width === 0) return points;
 
-  // fix letter space make + to -.
-  /*points.push([rect.left - margin, rect.top - margin])
-  points.push([rect.right + margin, rect.top - margin])
-  points.push([rect.right + margin, rect.bottom + margin])
-  points.push([rect.left - margin, rect.bottom + margin])*/
-  points.push([rect.left - margin, rect.top]);
-  points.push([rect.right - margin, rect.top]);
-  points.push([rect.right - margin, rect.bottom]);
-  points.push([rect.left - margin, rect.bottom]);
+  points.push([rect.left - margin, rect.top - margin]);
+  points.push([rect.right + margin, rect.top - margin]);
+  points.push([rect.right + margin, rect.bottom + margin]);
+  points.push([rect.left - margin, rect.bottom + margin]);
+
+  points.forEach(function (point) {
+    point[0] -= offset.x;
+    point[1] -= offset.y;
+  });
+  return points;
+}
+function rectToPointArray_fix(rect, offset, margin) {
+  var points = [];
+  if (rect.width === 0) return points;
+
+  points.push([rect.left, rect.top]);
+  points.push([rect.right, rect.top]);
+  points.push([rect.right, rect.bottom]);
+  points.push([rect.left, rect.bottom]);
+  // user letter space make + to -.
+  //points.push([rect.left - margin, rect.top])
+  //points.push([rect.right - margin, rect.top])
+  //points.push([rect.right - margin, rect.bottom])
+  //points.push([rect.left - margin, rect.bottom])
 
   points.forEach(function (point) {
     point[0] -= offset.x;
@@ -1026,6 +1041,7 @@ var TextNode = function () {
             lastLineMergedRect.height = lastLineMergedRect.height - rect.height > 0 ? lastLineMergedRect.height : rect.height;
             lastLineMergedRect.top = lastLineMergedRect.top - rect.top < 0 ? lastLineMergedRect.top : rect.top;
             lastLineMergedRect.bottom = lastLineMergedRect.bottom - rect.bottom > 0 ? lastLineMergedRect.bottom : rect.bottom;
+            lastLineMergedRect.right = lastLineMergedRect.right - rect.right > 0 ? lastLineMergedRect.right : rect.right;
           } else {
             lineMergedRects.push(copyRect(rect));
           }
@@ -1251,6 +1267,7 @@ var Menu = function (_BaseElement) {
       left: 0
     };
     _this.windowWidth = document.documentElement.clientWidth;
+    //this.windowWidth = this.container.getBoundingClientRect().width / 2
     _this.ticking = false;
     _this.height = 0;
     _this.width = 0;
@@ -1346,6 +1363,7 @@ var Menu = function (_BaseElement) {
       var _this3 = this;
 
       var mergeRects = {};
+      //console.log(this.mode)//node
       if (this.mode === EasyMarkerMode.REGION) {
         var rects = void 0;
         if (start.pageIndex !== end.pageIndex) {
@@ -1422,6 +1440,7 @@ var Menu = function (_BaseElement) {
       if (!this.height || !this.width) {
         this.height = Number((window.getComputedStyle(this.menuElement).height || '').replace('px', ''));
         this.width = Number((window.getComputedStyle(this.menuElement).width || '').replace('px', ''));
+        //this.width = this.container.getBoundingClientRect().width / 2
       }
 
       var _container$getBoundin = this.container.getBoundingClientRect(),
@@ -2005,8 +2024,8 @@ var Highlight = function (_BaseElement) {
 
     var defaultOptions = {
       highlightColor: '#FEFFCA',
-      underlineColor: '#af8978',
-      underlineWidth: 1,
+      underlineColor: '#CCCCCC',
+      underlineWidth: 3,
       tagBackground: '#af8978',
       tagColor: '#fff',
       opacity: 1,
@@ -2034,21 +2053,6 @@ var Highlight = function (_BaseElement) {
     key: 'getID',
     value: function getID() {
       return this.id++;
-    }
-  }, {
-    key: 'computeFontSize',
-    value: function computeFontSize(str, size) {
-      var spanDom = document.createElement('span');
-      spanDom.style.fontSize = size;
-      spanDom.style.opacity = '0';
-      // spanDom.style.fontFamily = family;
-      spanDom.innerHTML = str;
-      document.body.append(spanDom);
-      var sizeD = {};
-      sizeD.width = spanDom.offsetWidth;
-      sizeD.height = spanDom.offsetHeight;
-      spanDom.remove();
-      return sizeD;
     }
 
     /**
@@ -2100,10 +2104,11 @@ var Highlight = function (_BaseElement) {
             left: rect.left - offset.x,
             right: rect.right - offset.x
           };
+
           relativeRects.push(relativeRect);
           lineHeight = lineHeight || rect.height;
           var margin = _this2.option.margin || (lineHeight - rect.height) / 4;
-          return rectToPointArray(rect, offset, margin);
+          return rectToPointArray_fix(rect, offset, margin);
         });
         var markdown = void 0;
         if (this.easyMarker && this.easyMarker.markdown) {
@@ -2157,6 +2162,7 @@ var Highlight = function (_BaseElement) {
       this.lineMap.forEach(function (line) {
         var type = line.meta.type || _this3.type;
         _this3.option.highlightColor = line.meta.fillColor || _this3.option.highlightColor;
+        _this3.option.underlineColor = line.meta.underlineColor || _this3.option.underlineColor;
         _this3.option.tagColor = line.meta.fillColor || _this3.option.tagColor;
         line.points.forEach(function (points, index) {
           if (type === NoteType.UNDERLINE) {
@@ -2171,7 +2177,7 @@ var Highlight = function (_BaseElement) {
             text.setAttribute('y', points[2][1] + 4);
             text.setAttribute('dominant-baseline', 'hanging');
             text.setAttribute('text-anchor', 'end');
-            text.setAttribute('font-size', '12');
+            text.setAttribute('font-size', '10');
             text.setAttribute('fill', _this3.option.tagColor);
             text.textContent = line.meta.tag;
             text.classList.add('em-highlight-tag-text');
@@ -2183,12 +2189,12 @@ var Highlight = function (_BaseElement) {
             var rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             // rect.setAttribute('x', textRect.x - 5)
             // rect.setAttribute('y', textRect.y - 1)
-            rect.setAttribute('x', points[2][0] - _this3.computeFontSize(line.meta.tag, 12).width - 10);
+            rect.setAttribute('x', points[2][0] - 25 - 5);
             rect.setAttribute('y', points[2][1] - 0);
             rect.setAttribute('rx', 2);
             rect.setAttribute('ry', 2);
-            rect.setAttribute('width', _this3.computeFontSize(line.meta.tag, 12).width + 10);
-            rect.setAttribute('height', _this3.computeFontSize(line.meta.tag, 12).height + 2);
+            rect.setAttribute('width', 20 + 10);
+            rect.setAttribute('height', 14 + 2);
             rect.setAttribute('fill', _this3.option.tagBackground);
             _this3.element.insertBefore(rect, text);
             // }, 10)
@@ -2810,7 +2816,7 @@ var TouchEvent = function () {
     value: function onTouchEnd(e) {
       if (this.disabled) return;
       if (e.touches && e.touches.length > 1) return;
-      if (!this.hook('touchmove', e)) return;
+      if (!this.hook('touchend', e)) return;
 
       this.touchEndCallbacks.forEach(function (callback) {
         return callback(e);
@@ -3540,6 +3546,9 @@ var EasyMarker = function () {
         } else if (startCursorRegion.inRegion) {
           this.selectStatus = SelectStatus.SELECTING;
           this.movingCursor = this.cursor.start;
+        } else {
+          // 开始和结束都不在范围内,可能点击了滚动条
+          e.preventDefault();
         }
       }
       // if (!this.highlight.inRegion(e)) {
@@ -3646,7 +3655,8 @@ var EasyMarker = function () {
       this.setSelection(selection);
       this.selectStatus = SelectStatus.FINISH;
       this.menu.setPosition(this.start, this.end);
-      this.menu.type = MenuType.HIGHLIGHT;
+      this.menu.type = MenuType.SELECT;
+      //this.menu.type = MenuType.HIGHLIGHT
       this.menu.options = options;
       this.menu.show();
     }
@@ -3920,9 +3930,7 @@ var NodeEasyMarker = function (_BaseEasyMarker) {
           var position = this.getTouchRelativePosition(e);
           var startCursorRegion = this.cursor.start.inRegion(position);
           var endCursorRegion = this.cursor.end.inRegion(position);
-          if (!isMenuClick && !startCursorRegion.inRegion && !endCursorRegion.inRegion) {
-            this.reset();
-          }
+          if (!isMenuClick && !startCursorRegion.inRegion && !endCursorRegion.inRegion) ;
         }
         if (this.selectStatus === SelectStatus.NONE && this.isContains(e.target)) {
           this.touchStartTime = Date.now();

@@ -4,15 +4,13 @@
       <el-card shadow="never">
         <div class="flex_row">
           <div class="flex_1">
-            <div style="font-size: 20px;color: #303133;text-align: left">对话标注标签组管理</div>
+            <div style="font-size: 20px; color: #303133; text-align: left">对话标注标签组管理</div>
             <div class="h10"></div>
-            <div style="font-size: 14px;color: #909399;text-align: left">
-              定义一组对话标签,使用时先开启对话标注, 切分好对话回合后进行标注.
-            </div>
+            <div style="font-size: 14px; color: #909399; text-align: left">定义一组对话标签,使用时先开启对话标注, 切分好对话回合后进行标注.</div>
           </div>
           <div class="w10"></div>
           <div>
-            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建对话标注标签组</el-button>
+            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建标签组</el-button>
           </div>
         </div>
       </el-card>

@@ -11,7 +11,7 @@
       :show-close="showClose"
       center
     >
-      <div style="width:100%;height:20vh;line-height:20vh;text-align:center">
+      <div style="width: 100%; height: 20vh; line-height: 20vh; text-align: center">
         <el-progress status="success" :text-inside="true" :stroke-width="20" :percentage="percentage" :width="strokeWidth" :show-text="true"></el-progress>
       </div>
     </el-dialog>
@@ -20,14 +20,7 @@
 
 <script>
 let ipcRenderer = require('electron').ipcRenderer;
-//20秒后开始检测新版本
-let timeOut = window.setTimeout(() => {
-  ipcRenderer.send('checkForUpdate');
-}, 20000);
-//间隔1小时检测一次
-let interval = window.setInterval(() => {
-  ipcRenderer.send('checkForUpdate');
-}, 3600000);
+
 export default {
   name: 'app',
   data() {
@@ -35,12 +28,27 @@ export default {
       dialogVisible: false,
       closeOnClickModal: false,
       closeOnPressEscape: false,
-      showClose: false,
+      showClose: true,
       percentage: 0,
       strokeWidth: 200,
+      booleanAutoUpdate: false,
+      timeOut: null,
+      interval: null,
     };
   },
   mounted() {
+    this.booleanAutoUpdate = localStorage.getItem('booleanAutoUpdate') === '1';
+    if (this.booleanAutoUpdate) {
+      //20秒后开始检测新版本
+      this.timeOut = window.setTimeout(() => {
+        ipcRenderer.send('checkForUpdate');
+      }, 20000);
+      //间隔1小时检测一次
+      this.interval = window.setInterval(() => {
+        ipcRenderer.send('checkForUpdate');
+      }, 3600000);
+    }
+
     //接收主进程版本更新消息
     ipcRenderer.on('message', (event, arg) => {
       // for (var i = 0; i < arg.length; i++) {
@@ -49,6 +57,7 @@ export default {
       if ('update-available' === arg.cmd) {
         //显示升级对话框
         this.dialogVisible = true;
+        this.$message.success('发现新版本,请前往帮助中心手动升级!');
       } else if ('download-progress' === arg.cmd) {
         //更新升级进度
         /**
@@ -64,14 +73,14 @@ export default {
         this.percentage = Math.round(parseFloat(arg.message.percent));
       } else if ('error' === arg.cmd) {
         this.dialogVisible = false;
-        this.$message('新版本更新失败,请前往获取手动更新地址!');
+        this.$message.warning('新版本更新失败,请前往获取手动更新地址!');
       }
       // }
     });
   },
   destroyed() {
-    window.clearInterval(interval);
-    window.clearInterval(timeOut);
+    window.clearInterval(this.interval);
+    window.clearInterval(this.timeOut);
   },
 };
 </script>

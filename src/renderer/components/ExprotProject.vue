@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="`项目 ${project.name} 导出提示`" :visible.sync="showDialog">
+    <el-dialog :title="`工程 ${project.name} 导出提示`" :visible.sync="showDialog">
       <el-form v-if="project && project.num" label-width="100px" :loading="isWorking">
         <el-form-item label="标注进度">
           <div class="flex_col" style="text-align: left">

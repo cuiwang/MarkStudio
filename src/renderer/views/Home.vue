@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <div class="home_header">
-      <el-menu menu-trigger="click" :default-active="currectItemIndex" mode="horizontal" @select="onMenuClick" unique-opened background-color="#fff" text-color="#000000" active-text-color="#ffd04b">
+      <el-menu :default-active="currectItemIndex" mode="horizontal" @select="onMenuClick" unique-opened>
         <el-menu-item index="/dashboard">工作台</el-menu-item>
 
         <el-submenu index="">
@@ -9,22 +9,18 @@
           <el-menu-item index="/marksetting">实体标签管理</el-menu-item>
           <el-menu-item index="/relationsetting">关系标签管理</el-menu-item>
           <el-menu-item index="/dialoguesetting">对话标签管理</el-menu-item>
-          <el-menu-item index="/globalsetting">全局标签管理</el-menu-item>
+          <el-menu-item index="/globalsetting">分类标注管理</el-menu-item>
           <el-menu-item index="?" disabled>字典管理(开发中)</el-menu-item>
+          <el-menu-item index="" @click="onImportMarksClick">
+            <i class="el-icon-upload"></i>
+            批量导入
+          </el-menu-item>
         </el-submenu>
 
         <el-menu-item index="license" style="float: right">
           <a style="text-decoration: none" href="javascript:void(0);">V{{ version }}_Beta</a>
         </el-menu-item>
-        <el-menu-item index="/project">项目管理</el-menu-item>
-        <el-menu-item index="darkmode" @click="onChangeDarkModeClick" style="float: right">
-          <span class="flex_row align_center">{{ booleanDarkMode ? '日间模式' : '夜间模式' }}</span>
-        </el-menu-item>
-        <el-menu-item index="/help" style="float: right">
-          <span class="flex_row align_center">
-            帮助中心
-          </span>
-        </el-menu-item>
+        <el-menu-item index="/project">工程管理</el-menu-item>
         <el-menu-item index="quick" style="float: right">
           <el-popover placement="top-start" title="快捷键列表" width="200" trigger="hover">
             <div>[CTRL+方向左/上键] : 上一条</div>
@@ -35,9 +31,16 @@
             <div slot="reference">快捷键</div>
           </el-popover>
         </el-menu-item>
+        <el-menu-item index="darkmode" @click="onChangeDarkModeClick" style="float: right">
+          <span class="flex_row align_center">{{ booleanDarkMode ? '日间模式' : '夜间模式' }}</span>
+        </el-menu-item>
+
+        <el-menu-item index="/help" style="float: right">
+          <span class="flex_row align_center">帮助中心</span>
+        </el-menu-item>
       </el-menu>
     </div>
-    <div style="height: 60px;"></div>
+    <div style="height: 60px"></div>
     <div>
       <!--<keep-alive>-->
       <router-view></router-view>
@@ -47,19 +50,22 @@
     <!-- <el-footer class="footer">
       <div>@heiscuiwang</div>
     </el-footer>-->
+    <ImportMarks :show-dialog="boolShowImportMarksDialog" @cancelButtonClick="boolShowImportMarksDialog = false"></ImportMarks>
   </div>
 </template>
 <script>
 // @ is an alias to /src
-import db_utils from '../libs/db_utils';
-import Darkmode from 'darkmode-js';
-import config from '../../../package.json';
+import db_utils    from '../libs/db_utils';
+import Darkmode    from 'darkmode-js';
+import config      from '../../../package.json';
+import ImportMarks from '../components/ImportMarks';
+import {Cons}      from '../Constant'
 
 require('electron-disable-file-drop');
 
 export default {
   name: 'Home',
-  components: {},
+  components: { ImportMarks },
   data() {
     return {
       version: config.version, // 获取包的信息
@@ -67,19 +73,19 @@ export default {
       markTypeDefaultDatas: [
         {
           _id: -1,
-          editable: true,
+          editable: false,
           name: '自定义标注法示例',
           content: 'Nh-人名， Ns-地名， Ni-机构名',
           description: '点击[新建实体标注标签组]按钮,在新建页面中配置实体标注标签组.也可直接[编辑]本条进行修改.点击左侧箭头展开预览效果.',
           datas: [
-            { name: '人名', tag: 'Nh' },
-            { name: '地名', tag: 'Ns' },
-            { name: '机构名', tag: 'Ni' },
+            { name: '人名', tag: 'Nh', color: '' },
+            { name: '地名', tag: 'Ns', color: '' },
+            { name: '机构名', tag: 'Ni', color: '' },
           ],
         },
         {
           _id: -2,
-          editable: true,
+          editable: false,
           name: '人名、地名、机构名',
           content: 'Person-人名， Location-地名， Organization-机构名',
           description: '命名实体一般指的是文本中具有特定意义或者指代性强的实体,此示例用来标记人名、地名、机构名',
@@ -91,7 +97,7 @@ export default {
         },
         {
           _id: -3,
-          editable: true,
+          editable: false,
           name: '人名、地名、机构名、其他',
           content: 'Person-人名， Location-地名， Organization-机构名, Misc-其他',
           description: '命名实体一般指的是文本中具有特定意义或者指代性强的实体,此示例用来标记人名、地名、机构名、其他',
@@ -132,10 +138,10 @@ export default {
       globalTypeDefaultDatas: [
         {
           _id: -1,
-          editable: true,
+          editable: false,
           name: '自定义情感分类示例',
           content: 'Positive-正面， Opposite-反面， Neutral-中立',
-          description: '点击[新建文本分类标签组]按钮,在新建页面中配置文本分类标签组.也可直接[编辑]本条进行修改.点击左侧箭头展开预览效果.',
+          description: '点击[新建文本分类标注组]按钮,在新建页面中配置文本分类标注组.也可直接[编辑]本条进行修改.点击左侧箭头展开预览效果.',
           datas: [
             { name: '正面', tag: 'Positive' },
             { name: '反面', tag: 'Opposite' },
@@ -170,7 +176,7 @@ export default {
       relationTypeDefaultDatas: [
         {
           _id: -1,
-          editable: true,
+          editable: false,
           name: '自定义关系标注示例',
           content: 'A-继承， B-聚合， C-关联, D-依赖',
           description: '点击[新建关系标注标签组类型]按钮,在新建页面中配置标注关系类型类型.也可直接[编辑]本条进行修改.点击左侧箭头展开预览效果.',
@@ -196,7 +202,7 @@ export default {
       dialogueTypeDefaultDatas: [
         {
           _id: -1,
-          editable: true,
+          editable: false,
           name: '自定义对话标注示例',
           content: 'A-支持， B-反对， C-犹豫, D-中立',
           separator: '/#/gi',
@@ -223,10 +229,17 @@ export default {
       ],
       projectDefaultData: {
         _id: -1,
-        name: '示例项目',
+        name: '示例工程',
         created_at: '2020-03-01 12:00:00',
         updated_at: '2020-03-01 12:00:00',
-        dataFilePath: '',
+        datasource_radio:'1',
+        datasource_info:{},//数据库等信息
+        dataSync:false, //是否数据同步
+        dataSyncToLocalTime:'',
+        dataSyncToLocalNum:0,
+        dataSyncToRemoteTime:'',
+        dataSyncToRemoteNum:0,
+        dataFilePath: '示例工程',
         currectDataIndex: 0,
         num: {
           total: 4,
@@ -244,8 +257,8 @@ export default {
         working: true, //当前状态是否工作中/
       },
       datasDefaultDatas: [
-        '如果你想要标注人名、地名、机构名,就需要在文中找出:李明这样的人名,北京市这样的地名以及国家安全局这样的机构名.一旦你找到这些字/词/短语,用鼠标选中,并在文字上方弹出的窗口中选择一个实体标注标签组.一旦完成本条中所有标注工作,点击右上方的绿色[保存]按钮标记本条已处理完毕,然后点击旁边的[下一条]按钮就可以标注下一条了.',
-        '标注完上一条,相信聪明的你已经学会了本工具主要功能!接下来你可以通过切换最上面的[实体标注标签组管理]完成实体标注标签组自定义.一旦你完成所有文档的标注后,点击上面白色[导出数据]按钮,将最终的标注结果用JSON格式存储下来.如果你还想练习一下标注,同样点击[下一条]按钮.当然,聪明的你何不点击上面蓝色的[新建项目]按钮,开启你的标注工作吧~',
+        '如果你想要标注人名、地名、机构名,就需要在文中找出:李明这样的人名,北京市这样的地名以及国家安全局这样的机构名.一旦你找到这些字/词/短语,用鼠标选中,并在文字上方弹出的窗口中选择一个实体标注标签组.一旦完成本条中所有标注工作,点击右上方的绿色[保存]按钮标记本条已处理完毕(再次点击蓝色[激活]按钮,重新标注.),然后点击旁边的[下一条]按钮就可以标注下一条了.',
+        '标注完上一条,相信聪明的你已经学会了本工具主要功能!接下来你可以通过切换最上面的[实体标注标签组管理]完成实体标注标签组自定义.一旦你完成所有文档的标注后,点击上面白色[导出数据]按钮,将最终的标注结果用JSON格式存储下来.如果你还想练习一下标注,同样点击[下一条]按钮.当然,聪明的你何不点击上面蓝色的[新建工程]按钮,开启你的标注工作吧~',
         '中方赞赏伊姆兰·汗总理对中国脱贫攻坚成就作出的积极评价。我也注意到联合国驻华协调员常启德等国际组织负责人表示，中国的脱贫攻坚成果为世界带来重要启示，习近平主席带领中国政府和人民表现的决心和行动力是首要经验。',
         '锘挎槬鐪犱笉瑙夋檽锛屽澶勯椈鍟奸笩。????????鐪犱笉瑙夋檽锛屽???????鐪犱笉瑙夋檽锛屽澶勯椈鍟奸笩????????????锘挎槬鐪犱笉瑙夋檽锛屽澶勯椈鍟奸笩',
       ],
@@ -263,6 +276,7 @@ export default {
         label: '🌓', // default: ''
         autoMatchOsTheme: true, // default: true
       }),
+      boolShowImportMarksDialog: false,
     };
   },
   created() {
@@ -283,6 +297,7 @@ export default {
       });
     },
     initData() {
+
       //db_utils.remove(db_utils.MARK_TYPES_DB, {}, { multi: true });
       //db_utils.remove(db_utils.GLOBAL_TYPES_DB, {}, { multi: true });
       //db_utils.remove(db_utils.RELATION_TYPES_DB, {}, { multi: true });
@@ -330,7 +345,7 @@ export default {
           db_utils.insert(db_utils.MARK_TYPES_DB, this.markTypeDefaultDatas, (err, newDoc) => {});
         }
       });
-      // 默认文本分类标签组,保存到数据库
+      // 默认文本分类标注组,保存到数据库
       db_utils.find(db_utils.GLOBAL_TYPES_DB, {}, (err, documents) => {
         if (documents.length <= 0) {
           // 默认实体标注标签组,保存到数据库
@@ -351,28 +366,19 @@ export default {
           db_utils.insert(db_utils.DIALOGUE_TYPES_DB, this.dialogueTypeDefaultDatas, (err, newDoc) => {});
         }
       });
-      // 默认项目,保存到数据库
+      // 默认工程,保存到数据库
       db_utils.find(db_utils.PROJECTS_DB, {}, (err, documents) => {
         if (documents.length <= 0) {
           // 默认数据,保存到数据库
           db_utils.insert(db_utils.PROJECTS_DB, this.projectDefaultData, (err, newDoc) => {
             let datas = [];
             this.datasDefaultDatas.forEach((content, index) => {
-              let data = {
-                _id: -(index + 1),
-                project_id: -1,
-                index: index,
-                content: content,
-                wrong: 0,
-                status: 0, //0标注中 1已完成
-                tags: [],
-                relations: [],
-                dialogue: {
-                  separator: '',
-                  datas: [],
-                },
-                globalTypeId: '',
-              };
+              let data = JSON.parse(JSON.stringify(Cons.DATA_TEMPLATE))
+              data._id = -(index + 1)
+              data.project_id = -1
+              data.index = index
+              data.content = content
+
               if (index === 0) {
                 data.tags = [
                   { name: '人名', tag: 'Person', content: '李明', line_id: -1, start: 26, end: 28 },
@@ -385,7 +391,11 @@ export default {
               }
               datas.push(data);
             });
-            db_utils.insert(db_utils.DATAS_DB, datas, (err, documents) => {});
+            console.log(datas)
+            db_utils.insert(db_utils.DATAS_DB, datas, (err, documents) => {
+              console.log(err)
+              console.log(documents)
+            });
           });
         }
       });
@@ -405,6 +415,10 @@ export default {
     onChangeDarkModeClick() {
       this.booleanDarkMode = !this.booleanDarkMode;
       this.darkmode.toggle();
+    },
+    // 点击批量导入
+    onImportMarksClick() {
+      this.boolShowImportMarksDialog = true;
     },
   },
 };

@@ -4,15 +4,13 @@
       <el-card shadow="never">
         <div class="flex_row">
           <div class="flex_1">
-            <div style="font-size: 20px;color: #303133;text-align: left">文本分类标签组管理</div>
+            <div style="font-size: 20px; color: #303133; text-align: left">文本分类标注组管理</div>
             <div class="h10"></div>
-            <div style="font-size: 14px;color: #909399;text-align: left">
-              通常用来分类(标注)整条数据的情感、观点等.类似于标注,只不过此处标注的是整条数据.
-            </div>
+            <div style="font-size: 14px; color: #909399; text-align: left">通常用来分类(标注)整条数据的情感、观点等.类似于标注,只不过此处标注的是整条数据.</div>
           </div>
           <div class="w10"></div>
           <div>
-            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建文本分类标签组</el-button>
+            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建标签组</el-button>
           </div>
         </div>
       </el-card>
@@ -95,7 +93,7 @@
       </div>
     </el-dialog>
     <!--修改实体标注标签组-->
-    <el-dialog title="修改文本分类标签组" :visible.sync="needShowEditMarkTypeView" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
+    <el-dialog title="修改文本分类标注组" :visible.sync="needShowEditMarkTypeView" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
       <el-form :model="editMarkTypeForm" label-position="left" label-width="80px">
         <el-form-item label="名称" required>
           <el-input v-model="editMarkTypeForm.name" clearable placeholder="请填写名称" maxlength="30" show-word-limit></el-input>
@@ -346,13 +344,8 @@ export default {
   flex-wrap: wrap;
   justify-content: flex-start;
 
-  &:after {
-    content: '';
-    width: 18.8%;
-  }
-
   .tag-warp-item {
-    width: 18.8%;
+    margin: 5px 5px 0 0;
   }
 }
 

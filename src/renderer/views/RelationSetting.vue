@@ -4,15 +4,16 @@
       <el-card shadow="never">
         <div class="flex_row">
           <div class="flex_1">
-            <div style="font-size: 20px;color: #303133;text-align: left">关系标注标签组管理</div>
+            <div style="font-size: 20px; color: #303133; text-align: left">关系标注标签组管理</div>
             <div class="h10"></div>
-            <div style="font-size: 14px;color: #909399;text-align: left">
-              定义一组关系标签,使用时先开启关系标注, 先后点击两个实体完成连接关系.
-            </div>
+            <div style="font-size: 14px; color: #909399; text-align: left">定义一组关系标签,使用时先开启关系标注, 先后点击两个实体完成连接关系.</div>
+          </div>
+          <div>
+            <el-button type="" @click="onExportMarksClick" icon="el-icon-s-promotion">导出标签组</el-button>
           </div>
           <div class="w10"></div>
           <div>
-            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建关系标注标签组</el-button>
+            <el-button type="primary" @click="needShowNewMarkTypeView = true">新建标签组</el-button>
           </div>
         </div>
       </el-card>
@@ -136,6 +137,7 @@
 
 <script>
 import db_utils from '../libs/db_utils';
+import FileSaver from 'file-saver';
 
 export default {
   name: 'RelationSetting',
@@ -188,15 +190,21 @@ export default {
         'hsla(209, 100%, 56%, 0.73)',
         '#c7158577',
       ],
+      isSaving: false,
     };
   },
   mounted() {
     console.log('RelationTypeSetting mounted');
 
+    this.$events.on('RELATIONTYPE_CHANGED', (text) => {
+      this.initData();
+    });
+
     this.initData();
   },
   methods: {
     initData() {
+      this.tableData = [];
       db_utils
         .generate_find(db_utils.RELATION_TYPES_DB, {})
         .sort({ editable: 1 })
@@ -353,6 +361,54 @@ export default {
       this.editMarkTypeForm = JSON.parse(JSON.stringify(row));
       this.editMarkTypeForm._index = index;
       this.needShowEditMarkTypeView = true;
+    },
+    // 点击导出标签组
+    onExportMarksClick() {
+      this.saveJson();
+    },
+    saveJson() {
+      this.$notify({
+        title: '导出JSON',
+        message: '正在导出,请稍后...',
+        type: 'success',
+      });
+      if (this.isSaving) {
+        this.$notify({
+          title: '导出JSON',
+          message: '正在导出,请稍后...',
+          type: 'success',
+        });
+        return;
+      }
+      this.isSaving = true;
+
+      let _jsonData = {
+        type: 'relation',
+        content: [],
+      };
+
+      this.tableData.forEach((item) => {
+        _jsonData.content.push({
+          status: '1',
+          name: item['name'],
+          content: item['content'],
+          description: item['description'],
+          datas: item['datas'],
+        });
+      });
+
+      // 将json转换成字符串
+      const data = JSON.stringify(_jsonData);
+      const blob = new Blob([data], { type: '' });
+      this.$notify({
+        title: '导出JSON',
+        message: '导出成功!',
+        type: 'success',
+      });
+      FileSaver.saveAs(blob, '导出的关系标签组.json');
+      this.isSaving = false;
+
+      this.$emit('cancelButtonClick');
     },
   },
 };
