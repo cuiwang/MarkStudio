@@ -35,7 +35,7 @@
                             background-color="#545c64"
                             text-color="#fff"
                             active-text-color="#ffd04b">
-                        <el-menu-item index="1">全平台-数据标注工具</el-menu-item>
+                        <el-menu-item index="1">全平台-数据标注工具 v2.0</el-menu-item>
                         <el-menu-item style="float: right"
                         >
                             <a href="#" target="_blank">{{ version }} | WeChat@heiscuiwang</a>
@@ -49,7 +49,7 @@
                                 <div style="font-size: 18px;color: #303133;text-align: left">实体标注 、分类标注、 关系标注 、对话标注
                                 </div>
                             </div>
-                            <div> <span class="danger_color bold_text"> * 最新支持 MySQL、MongoDB 数据双向同步</span></div>
+                            <div> <span class="danger_color bold_text"> * 此版本为2.0离线版，只做基础功能维护。<br>如需支持协同标注的云服务版本，请前往 <a href="http://ms.youdongtai.com">MarkStudio 3.0 </a>查看。</span></div>
 
                             <div class="flex_row">
                                 <div class="flex_1">
@@ -266,6 +266,14 @@
                             <el-card>
                                 <div class="title_text_size main_text_color">更新记录</div>
                                 <el-divider></el-divider>
+                                <div class="smalltitle_text_size main_text_color padding_10">
+                                    V2.7.6 : 2022年07月04日
+                                </div>
+                                <div class="normal_text_size normal_text_color padding_10">
+                                    1. 新增回车换行识别（默认\n）。
+                                    2. Mysql/Mongodb 双向同步无法获取指定字段问题修复。
+                                    2. 其他性能优化。
+                                </div>
                                 <div class="smalltitle_text_size main_text_color padding_10">
                                     V2.7.5_Beta : 2022年05月17日
                                 </div>
@@ -504,23 +512,22 @@
                     activeIndex: '1',
                     previewSrcList: [
                         'http://datasmark.youdongtai.com/images/1.png',
-                    'http://datasmark.youdongtai.com/images/2.png',
-                    'http://datasmark.youdongtai.com/images/3.png',
-                    'http://datasmark.youdongtai.com/images/4.png',
-                    'http://datasmark.youdongtai.com/images/5.png',
-                    'http://datasmark.youdongtai.com/images/6.png',
-                    'http://datasmark.youdongtai.com/images/1-1.png',
-                    'http://datasmark.youdongtai.com/images/2-1.png',
-                    'http://datasmark.youdongtai.com/images/3-1.png',
+                        'http://datasmark.youdongtai.com/images/2.png',
+                        'http://datasmark.youdongtai.com/images/3.png',
+                        'http://datasmark.youdongtai.com/images/4.png',
+                        'http://datasmark.youdongtai.com/images/5.png',
+                        'http://datasmark.youdongtai.com/images/6.png',
+                        'http://datasmark.youdongtai.com/images/1-1.png',
+                        'http://datasmark.youdongtai.com/images/2-1.png',
+                        'http://datasmark.youdongtai.com/images/3-1.png',
                     ],
-                    version: 'V2.7.5_Beta',
-                    versionTime: '2022年05月17日',
-                    versionInfo: '1. 新增项目添加数据分割符配置。\n' +
-                            '2. 其他性能优化。',
-                    nextVersionInfo: '1.基础功能维护 2.新增文本翻译标注功能 3.释放Web端服务 4.ai辅助标注',
-                    win_url: 'http://datasmark.youdongtai.com/files/Mark Studio-2.7.5-win.zip',
-                    mac_url: 'http://datasmark.youdongtai.com/files/Mark Studio-2.7.5-mac.zip',
-                    linux_url: 'http://datasmark.youdongtai.com/files/markstudio_2.7.5_amd64.deb',
+                    version: 'V2.7.6',
+                    versionTime: '2022年07月04日',
+                    versionInfo: '1. 新增回车换行识别（默认\\n）。2.Mysql/Mongodb 双向同步无法获取指定字段问题修复。 3.其他优化措施。',
+                    nextVersionInfo: '1.基础功能维护',
+                    win_url: 'http://datasmark.youdongtai.com/files/Mark Studio-2.7.6-win.zip',
+                    mac_url: 'http://datasmark.youdongtai.com/files/Mark Studio-2.7.6-mac.zip',
+                    linux_url: 'http://datasmark.youdongtai.com/files/markstudio_2.7.6_amd64.deb',
                 };
             },
             methods: {
