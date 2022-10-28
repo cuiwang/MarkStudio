@@ -1,8 +1,9 @@
 {
-  "name": "datasmark",
-  "version": "2.7.4",
-  "author": "cuiwang <41612021@qq.com>",
-  "description": "a NER tool",
+  "name": "markstudio",
+  "version": "3.1.1",
+  "author": "Choi Wan <1991.cuiwang@gmail.com>",
+  "description": "一个简洁的开源数据标注工具",
+  "homepage": "http://ms.youdongtai.com",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -18,7 +19,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "数据标注工具",
+    "productName": "Mark Studio",
     "appId": "cn.developer.cuiwang.datasmark",
     "publish": {
       "provider": "generic",
@@ -69,7 +70,7 @@
       "allowElevation": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "数据标注工具"
+      "shortcutName": "Mark Studio"
     }
   },
   "dependencies": {
@@ -91,6 +92,7 @@
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
+    "vuex": "^2.5.0",
     "vuex-electron": "^1.0.0"
   },
   "devDependencies": {
@@ -98,8 +100,10 @@
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-minify-webpack-plugin": "^0.3.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
     "cfonts": "^2.1.2",
@@ -131,5 +135,6 @@
     "webpack-dev-server": "^3.1.4",
     "webpack-hot-middleware": "^2.22.2",
     "webpack-merge": "^4.1.3"
-  }
+  },
+  "web-types": "./web-types.json"
 }
