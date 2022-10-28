@@ -87,13 +87,20 @@ export default {
 <style>
 .darkmode-layer,
 .darkmode-toggle {
-  z-index: 500;
+  z-index: 100;
 }
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: system,-apple-system,-webkit-system-font,'SF Pro Display','SF Pro Text','SFNSText','PingFang SC','STHeiti','Helvetica Neue',Helvetica,'Microsoft yahei','\005fae\008f6f\0096c5\009ed1',Arial,sans-serif!important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  width: 100vw;
+}
+
+.el-dialog{
+  border-radius: 15px;
 }
 </style>

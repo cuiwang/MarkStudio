@@ -13,6 +13,30 @@
   font-weight: bold
 }
 
+.normal_text{
+  font-weight: normal;
+}
+
+.text_center {
+  text-align: center;
+}
+
+.text_right {
+  text-align: right;
+}
+
+.text_left {
+  text-align: left;
+}
+
+.cursor_pointer{
+  cursor: pointer;
+}
+
+.overflow_auto{
+overflow: auto;
+}
+
 .separate_line {
   height: 1px;
   width: 100%;
@@ -27,12 +51,18 @@
   height: 100%;
 }
 
+.box_shadow{
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)
+}
+
 // color
 $maincolor: #409eff;
 $danger_color: #F56C6C;
 $info_color: #909399;
 $success_color: #67C23A;
 $warning_color: #E6A23C;
+
+
 
 .maincolor {
   color: #409EFF;
@@ -54,6 +84,11 @@ $warning_color: #E6A23C;
   color: #E6A23C;
 }
 
+.white_color {
+  color: #ffffff;
+}
+
+
 .green_dot{
   width: 10px;
   height: 10px;
@@ -73,8 +108,11 @@ $main_text_color: #303133;
 $normal_text_color: #606266;
 $description_text_color: #909399;
 
+.big_text_color {
+  color: #1d1d1f;
+}
 .main_text_color {
-  color: #303133;
+  color: #333333;
 }
 
 .normal_text_color {
@@ -94,6 +132,9 @@ $minititle_text_size: 12px;
 
 .bigtitle_text_size {
   font-size: 20px;
+}
+.hugetitle_text_size {
+  font-size: 30px;
 }
 
 .title_text_size {
@@ -136,6 +177,13 @@ $minititle_text_size: 12px;
 
 .padding_20 {
   padding: 20px;
+}
+
+.padding_0_20 {
+  padding:0 20px;
+}
+.padding_10_20 {
+  padding:10px 20px;
 }
 
 .padding_top_10 {
@@ -216,7 +264,7 @@ $minititle_text_size: 12px;
 
 // 高度
 .h5 {
-  height: 10px;
+  height: 5px;
 }
 
 .h10 {
@@ -224,7 +272,7 @@ $minititle_text_size: 12px;
 }
 
 .h15 {
-  height: 10px;
+  height: 15px;
 }
 
 .h20 {
@@ -266,6 +314,10 @@ $minititle_text_size: 12px;
 .flex_row {
   display: flex;
   flex-direction: row;
+}
+
+.flex_warp{
+  flex-wrap: wrap;
 }
 
 .justify_center {

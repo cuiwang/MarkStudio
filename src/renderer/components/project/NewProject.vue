@@ -13,16 +13,6 @@
                     show-word-limit
                     placeholder="请输入工程名称"></el-input>
         </el-form-item>
-        <el-form-item label="实体标注标签组" required>
-          <el-select v-model="projectForm.markTypeId"
-                     @change="onMarkTypeChanged"
-                     placeholder="请选择实体标注标签组,自定义标注请在对应管理页面配置">
-            <el-option v-for="(markType, index) in markTypeDatas"
-                       :key="index"
-                       :label="`${markType.content}`"
-                       :value="markType._id"></el-option>
-          </el-select>
-        </el-form-item>
         <el-form-item label="描述">
           <el-input clearable
                     v-model="projectForm.description"
@@ -30,32 +20,49 @@
                     maxlength="50"
                     show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="文本分类标注组">
-          <el-select v-model="projectForm.globalTypeId" @change="onGlobalTypeChanged" placeholder="下拉选择需要的文本分类标注组">
-            <el-option v-for="(markType, index) in globalTypeDatas"
+        <el-divider/>
+        <el-form-item label="标注类型(多选)" required>
+          <el-checkbox-group v-model="checkList">
+            <el-checkbox v-for="type in Object.values(WorkingTypeName)" :key="type" :label="type"></el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item required label="实体标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.ENTITY])">
+          <el-select v-model="projectForm.markTypeId"
+                     @change="onEntityTypeChanged"
+                     placeholder="请选择实体标注标签组,自定义标注请在对应管理页面配置">
+            <el-option v-for="(markType, index) in markTypeDatas"
                        :key="index"
-                       :label="`${getMaxString(markType.content)}`"
+                       :label="markType.content"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="关系标注标签组">
+        <el-form-item required label="文本分类标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.CLASSIFY])">
+          <el-select v-model="projectForm.globalTypeId" @change="onGlobalTypeChanged" placeholder="下拉选择需要的文本分类标签组">
+            <el-option v-for="(markType, index) in globalTypeDatas"
+                       :key="index"
+                       :label="markType.content"
+                       :value="markType._id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item required label="关系标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.RELATION])">
           <el-select v-model="projectForm.relationTypeId" @change="onRelationTypeChanged" placeholder="下拉选择需要的关系标注标签组">
             <el-option v-for="(markType, index) in relationTypeDatas"
                        :key="index"
-                       :label="`${getMaxString(markType.content)}`"
+                       :label="markType.content"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="对话标注标签组">
+        <el-form-item required label="对话标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.DIALOGUE])">
           <el-select v-model="projectForm.dialogueTypeId" @change="onDialogueTypeChanged" placeholder="下拉选择需要的对话标注标签组">
             <el-option v-for="(markType, index) in dialogueTypeDatas"
                        :key="index"
-                       :label="`${markType.content}`"
+                       :label="markType.content"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
+        <el-divider/>
         <el-form-item label="数据源">
-          <div class="flex_row align_center" style="height: 40px; justify-content: flex-start">
+          <div class="flex_row align_center" style="height: 40px; justify-content: space-around">
             <el-radio v-model="projectForm.datasource_radio" label="1">本地文件</el-radio>
             <el-radio v-model="projectForm.datasource_radio" label="2">远程文件</el-radio>
             <el-radio v-model="projectForm.datasource_radio" label="3">MySQL</el-radio>
@@ -71,7 +78,7 @@
               accept=".txt,.TXT"
               :on-exceed="handleExceed"
               :on-remove="handleRemove"
-              :before-upload="beforeAvatarUpload"
+              :before-upload="beforeUpload"
               :auto-upload="false"
               :multiple="false"
           >
@@ -194,10 +201,19 @@
             </div>
           </el-form-item>
         </el-form>
-        <el-form-item v-if="projectForm.datasource_radio!=='3' && projectForm.datasource_radio!=='4'" label="字符集选择">
+        <el-form-item v-if="projectForm.datasource_radio!=='3' && projectForm.datasource_radio!=='4'" required label="字符集选择">
           <el-select v-model="encoding" @change="onEncodingChanged" placeholder="默认字符集utf-8">
             <el-option v-for="(encode, index) in encodings" :key="index" :label="encode" :value="encode"></el-option>
           </el-select>
+        </el-form-item>
+
+        <el-form-item v-if="projectForm.datasource_radio!=='3' && projectForm.datasource_radio!=='4'" label="数据分隔符">
+          <el-input v-model="separation_tag"
+                    clearable
+                    placeholder="请输入自定义分隔符"
+          >
+            <el-button slot="append" @click="onSeparationTagInputClick">确定</el-button>
+          </el-input>
         </el-form-item>
 
         <el-form-item v-if="uploadOriginalDatas.length" label="数据预览">
@@ -220,15 +236,13 @@
   </div>
 </template>
 <script>
-import db_utils    from '../libs/db_utils'
+import db_utils    from '../../libs/db_utils'
 import fs          from 'fs'
 import readline    from 'readline'
-import {fetchGet}  from '../libs/axiosService'
-import DBHelper    from '../libs/mysqlHelper'
-import mysqlMap    from '../libs/mysqlMap'
-import date_utils  from '../libs/date_utils'
-import {Cons}      from '../Constant'
-import MongoHelper from '../libs/mongoHelper'
+import {fetchGet}  from '../../libs/axiosService'
+import DBHelper    from '../../libs/mysqlHelper'
+import {Cons}      from '../../Constant'
+import MongoHelper from '../../libs/mongoHelper'
 
 export default {
   name: 'NewProject',
@@ -245,38 +259,72 @@ export default {
     return {
       projectForm: JSON.parse(JSON.stringify(Cons.PROJECT_TEMPLATE)),
       db_err:'',
+      // ────────────────────────── 分割线  ──────────────────────────
       datasource_file_url: '',
       encoding: 'utf-8',
       encodings: Cons.ENCODINGS,
+      separation_tag:'',
+      file_data:'',
       fileList: [], //上传组件,文件预览
       isReadingFile: false, //是否正在解析文件
+      // ────────────────────────── 分割线  ──────────────────────────
       markTypeDatas: [], //从数据库中读取的实体标注标签组列表
-      globalTypeDatas: [], //从数据库中读取的文本分类标注组列表
+      globalTypeDatas: [], //从数据库中读取的文本分类标签组列表
       relationTypeDatas: [], //从数据库中读取的关系标注标签组列表
       dialogueTypeDatas: [], //从数据库中读取的对话标注标签组列表
+      // ────────────────────────── 分割线  ──────────────────────────
       uploadOriginalDatas: [], // 按行解析完,存入数组,准备处理
+      // ────────────────────────── 分割线  ──────────────────────────
+      checkList: [],
+      WorkingType: Cons.WorkingType,
+      WorkingTypeName: Cons.WorkingTypeName
     }
   },
   mounted() {
-    this.initEvent()
     this.initData()
   },
   methods: {
-    initEvent() {
-      this.$events.on('MARKTYPE_CHANGED', (text) => {
-        this.initData()
+    initData() {
+      db_utils.find(db_utils.LABELS_DB, {
+        type:Cons.WorkingType.ENTITY
+      }, (err, documents) => {
+        this.markTypeDatas = []
+        for (const document of documents) {
+          this.markTypeDatas.unshift(document)
+        }
       })
-      this.$events.on('GLOBALTYPE_CHANGED', (text) => {
-        this.initData()
+      db_utils.find(db_utils.LABELS_DB, {
+        type:Cons.WorkingType.CLASSIFY
+      }, (err, documents) => {
+        this.globalTypeDatas = []
+        for (const document of documents) {
+          this.globalTypeDatas.unshift(document)
+        }
       })
-      this.$events.on('RELATIONTYPE_CHANGED', (text) => {
-        this.initData()
+      db_utils.find(db_utils.LABELS_DB, {
+        type:Cons.WorkingType.RELATION
+      }, (err, documents) => {
+        this.relationTypeDatas = []
+        for (const document of documents) {
+          this.relationTypeDatas.unshift(document)
+        }
       })
-      this.$events.on('DIALOGUESETTING_CHANGED', (text) => {
-        this.initData()
+      db_utils.find(db_utils.LABELS_DB, {
+        type:Cons.WorkingType.DIALOGUE
+      }, (err, documents) => {
+        this.dialogueTypeDatas = []
+        for (const document of documents) {
+          this.dialogueTypeDatas.unshift(document)
+        }
       })
     },
-    beforeAvatarUpload(file) {
+    // ────────────────────────── 分割线 ──────────────────────────
+    // 判断当前标注类型是否激活
+    doCheckMarkTypeIsActived(_type) {
+      return this.checkList.indexOf(_type) !== -1
+    },
+    // ────────────────────────── 上传  ──────────────────────────
+    beforeUpload(file) {
       const isTxt = file.type === 'txt'
       const isLt500M = file.size / 1024 / 1024 < 500
       if (!isTxt) {
@@ -286,19 +334,6 @@ export default {
         this.$message.error('上传文件大小不能超过 500MB!')
       }
       return isTxt && isLt500M
-    },
-    checkedNewProjectItems() {
-      if (!this.projectForm.name) {
-        this.showMessageWithText('请填写工程名称')
-        return false
-      } else if (!this.projectForm.markTypeId) {
-        this.showMessageWithText('请选择实体标注标签组')
-        return false
-      } else if (this.projectForm.datasource_radio!=='3'  &&this.projectForm.datasource_radio!=='4'&& !this.projectForm.dataFilePath && this.uploadOriginalDatas.length <= 0) {
-        this.showMessageWithText('请按要求上传数据文件')
-        return false
-      }
-      return true
     },
     // 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
     handleChange(file, fileList) {
@@ -324,9 +359,12 @@ export default {
           //结束后调用的
           this.isReadingFile = false
         })
+        // Read and disply the file data on console
+        readstream.on('data',  (chunk)=> {
+          this.file_data = chunk.toString()
+        });
       }
     },
-    // ────────────────────────── 选择文件上传组件 ──────────────────────────
     handleExceed(files, fileList) {
       this.$message({
         message: `当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`,
@@ -338,74 +376,44 @@ export default {
       this.isReadingFile = false
       this.uploadOriginalDatas = []
     },
-    initData() {
-      db_utils.find(db_utils.MARK_TYPES_DB, {}, (err, documents) => {
-        this.markTypeDatas = []
-        for (const document of documents) {
-          this.markTypeDatas.unshift(document)
-        }
-      })
-      db_utils.find(db_utils.GLOBAL_TYPES_DB, {}, (err, documents) => {
-        this.globalTypeDatas = []
-        for (const document of documents) {
-          this.globalTypeDatas.unshift(document)
-        }
-      })
-      db_utils.find(db_utils.RELATION_TYPES_DB, {}, (err, documents) => {
-        this.relationTypeDatas = []
-        for (const document of documents) {
-          this.relationTypeDatas.unshift(document)
-        }
-      })
-      db_utils.find(db_utils.DIALOGUE_TYPES_DB, {}, (err, documents) => {
-        this.dialogueTypeDatas = []
-        for (const document of documents) {
-          this.dialogueTypeDatas.unshift(document)
-        }
-      })
+    // 修改字符集
+    onEncodingChanged(_encoding) {
+      this.encoding = _encoding
     },
     // ────────────────────────── 分割线 ──────────────────────────
-    // 选择实体标注标签组
-    onMarkTypeChanged(_markTypeId) {
+    onEntityTypeChanged(_markTypeId) {
       // 通过id获取name
-      db_utils.findOne(db_utils.MARK_TYPES_DB, {_id: _markTypeId}, (err, document) => {
+      db_utils.findOne(db_utils.LABELS_DB, {_id: _markTypeId}, (err, document) => {
         if (document) {
-          this.projectForm.markTypeName = document.content
+          this.projectForm.markTypeName = document.name
         }
       })
     },
     onGlobalTypeChanged(_globalTypeId) {
       // 通过id获取name
-      db_utils.findOne(db_utils.GLOBAL_TYPES_DB, {_id: _globalTypeId}, (err, document) => {
+      db_utils.findOne(db_utils.LABELS_DB, {_id: _globalTypeId}, (err, document) => {
         if (document) {
-          this.projectForm.globalTypeName = document.content
+          this.projectForm.globalTypeName = document.name
         }
       })
     },
     onRelationTypeChanged(_relationTypeId) {
       // 通过id获取name
-      db_utils.findOne(db_utils.RELATION_TYPES_DB, {_id: _relationTypeId}, (err, document) => {
+      db_utils.findOne(db_utils.LABELS_DB, {_id: _relationTypeId}, (err, document) => {
         if (document) {
-          this.projectForm.relationTypeName = document.content
+          this.projectForm.relationTypeName = document.name
         }
       })
     },
     onDialogueTypeChanged(_dialogueTypeId) {
       // 通过id获取name
-      db_utils.findOne(db_utils.DIALOGUE_TYPES_DB, {_id: _dialogueTypeId}, (err, document) => {
+      db_utils.findOne(db_utils.LABELS_DB, {_id: _dialogueTypeId}, (err, document) => {
         if (document) {
-          this.projectForm.dialogueTypeName = document.content
+          this.projectForm.dialogueTypeName = document.name
         }
       })
     },
-    // 修改字符集
-    onEncodingChanged(_encoding) {
-      this.encoding = _encoding
-    },
-    // 设置最大显示长度的字符串
-    getMaxString(str) {
-      return str.length > 30 ? str.substring(0, 29) + '...' : str
-    },
+    // ────────────────────────── 分割线  ──────────────────────────
     // 保存数据到数据库
     saveDatas(project_id) {
       // 字段: _id,content,status,project_id,tags[{name,tag,start,end}]
@@ -423,16 +431,20 @@ export default {
         this.$emit('cancelButtonClick')
       })
     },
+    // 数据分割
+    onSeparationTagInputClick() {
+      this.uploadOriginalDatas = this.file_data.split(this.separation_tag)
+    },
     // ────────────────────────── 新建工程 ──────────────────────────
     // 保存按钮点击
     saveNewProjectClick() {
       // 1.校验 2.保存数据库 3通知更新
       if (this.checkedNewProjectItems()) {
+        this.doMarkTypeReform()
         // 如果是mysql
           // save to db
           // 保存到数据库
           // 1.保存数据 得到工程id , 得到实体标注标签组名称 2.保存工程
-          this.projectForm.num.total = this.uploadOriginalDatas.length // 设置总数
           db_utils.insert(db_utils.PROJECTS_DB, this.projectForm, (err, newDoc) => {
             //console.log(err)
             //console.log('project new:');
@@ -442,17 +454,60 @@ export default {
         }
 
     },
-    showMessageWithText(text, type = 'error') {
-      this.$message({
-        message: text,
-        type: type,
-        center: true,
-        offset: 70,
-      })
+    checkedNewProjectItems() {
+      if (!this.projectForm.name) {
+        this.showMessageWithText('请填写工程名称')
+        return false
+      }else if (this.checkList.length === 0){
+        this.showMessageWithText('请选择标注类型')
+        return false
+      }
+      else if (this.projectForm.datasource_radio!=='3'  &&this.projectForm.datasource_radio!=='4'&& !this.projectForm.dataFilePath && this.uploadOriginalDatas.length <= 0) {
+        this.showMessageWithText('请按要求上传数据文件')
+        return false
+      }
+      return true
+    },
+    // 标注类型清理
+    doMarkTypeReform() {
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.ENTITY])) {
+        delete this.projectForm.markTypeName
+        delete this.projectForm.markTypeId
+      }
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.CLASSIFY])) {
+        delete this.projectForm.globalTypeName
+        delete this.projectForm.globalTypeId
+      }
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.DIALOGUE])) {
+        delete this.projectForm.dialogueTypeName
+        delete this.projectForm.dialogueTypeId
+      }
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.RELATION])) {
+        delete this.projectForm.relationTypeName
+        delete this.projectForm.relationTypeId
+      }
+      // 文本翻译
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.TRANSLATION])) {
+        delete this.projectForm.translationName
+        delete this.projectForm.translationId
+      }else {
+        this.projectForm.translationName = 'translation'
+        this.projectForm.translationId = '-1'
+      }
+      // 语义解析
+      if (!this.doCheckMarkTypeIsActived(this.WorkingTypeName[this.WorkingType.TEXT2SQL])) {
+        delete this.projectForm.text2sqlName
+        delete this.projectForm.text2sqlId
+      }else {
+        this.projectForm.text2sqlName = 'text2sql'
+        this.projectForm.text2sqlId = '-1'
+      }
+
     },
     cancelButtonClick() {
       this.$emit('cancelButtonClick')
     },
+    // ────────────────────────── 在线数据  ──────────────────────────
     getDatasetFile_Online() {
       this.isReadingFile = true
       fetchGet(this.datasource_file_url).then((response) => {
@@ -514,7 +569,7 @@ export default {
             } else {
               this.db_err = ''
               this.uploadOriginalDatas = results.map(res=>{
-                return res.content
+                return res[this.projectForm.datasource_info.column]
               })
             }
           })
@@ -559,7 +614,7 @@ export default {
           }else {
             this.db_err = ''
             this.uploadOriginalDatas = results.map(res=>{
-              return res.content
+              return res[this.projectForm.datasource_info.column]
             })
           }
           conn.close();
@@ -571,14 +626,16 @@ export default {
 
 
     },
-
   },
 }
 </script>
 <style lang="scss" scoped>
-@import '../globals.scss';
+@import '../../globals';
 
 .el-select {
   width: 100%;
+}
+.el-select-dropdown__item{
+  max-width: 540px;
 }
 </style>

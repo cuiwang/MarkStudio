@@ -3,6 +3,7 @@ import path from 'path';
 import { remote } from 'electron';
 
 let db = {};
+
 db.marktypes = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/marktypes.db'),
@@ -23,6 +24,10 @@ db.projects = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/projects.db'),
 });
+db.labels = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/labels.db'),
+});
 // db.datas 存放工程的源文件数据,工程创建后自动生成,标注处理后自动更新
 //[{ project_id:工程序号,marktype_id:实体标注标签组序号,
 // data:原始文本内容,index:索引从1开始,
@@ -31,6 +36,18 @@ db.projects = new Datastore({
 db.datas = new Datastore({
   autoload: true,
   filename: path.join(remote.app.getPath('userData'), '/datas.db'),
+});
+db.synclogs = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/synclogs.db'),
+});
+db.datalogs = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/datalogs.db'),
+});
+db.members = new Datastore({
+  autoload: true,
+  filename: path.join(remote.app.getPath('userData'), '/members.db'),
 });
 
 export default db;

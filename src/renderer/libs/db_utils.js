@@ -11,156 +11,117 @@ const GLOBAL_TYPES_DB = 'GLOBAL_TYPES_DB';
 const RELATION_TYPES_DB = 'RELATION_TYPES_DB';
 const DIALOGUE_TYPES_DB = 'DIALOGUE_TYPES_DB';
 const PROJECTS_DB = 'PROJECTS_DB';
+const LABELS_DB = 'LABELS_DB';
 const DATAS_DB = 'DATAS_DB';
+const MEMBERS_DB = 'MEMBERS_DB';
+const SYNCLOGS_DB = 'SYNCLOGS_DB';
+const DATALOGS_DB = 'DATALOGS_DB';
+
+const DBs = {
+  'MARK_TYPES_DB' : db.marktypes,
+  'GLOBAL_TYPES_DB' : db.globaltypes,
+  'RELATION_TYPES_DB' : db.relationtypes,
+  'DIALOGUE_TYPES_DB' : db.dialoguetypes,
+  'PROJECTS_DB' : db.projects,
+  'LABELS_DB' : db.labels,
+  'DATAS_DB' : db.datas,
+  'MEMBERS_DB' : db.members,
+  'SYNCLOGS_DB' : db.synclogs,
+  'DATALOGS_DB' : db.datalogs
+}
 
 // ────────────────────────── global ──────────────────────────
-function addTimeProperty(newDoc, isCreate = true) {
+function addTimeProperty(newDoc, isCreate = true,isUpdate = false) {
   const now = date_utils.dateNow();
   if (Array.isArray(newDoc)) {
     newDoc.forEach((data) => {
-      data.updated_at = now;
       if (isCreate) {
         data.created_at = now;
       }
+      if (isUpdate){
+        newDoc.updated_at = now;
+      }
     });
   } else {
-    newDoc.updated_at = now;
     if (isCreate) {
       newDoc.created_at = now;
+    }
+    if (isUpdate){
+      newDoc.updated_at = now;
     }
   }
   return newDoc;
 }
-
+// https://github.com/louischatriot/nedb
 // ────────────────────────── methods ──────────────────────────
+/**
+ * 插入数据,可以单条对象插入也可以放入数组对象.
+ * @param dbname
+ * @param newDoc 此操作为原子操作,意味着有一条失败,就全部回退.
+ * 唯一索引不要重复,否则无法插入.
+ * @param cb (err, doc_docs)=>{}
+ */
 function insert(dbname, newDoc, cb) {
   newDoc = addTimeProperty(newDoc, true);
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.insert(newDoc, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.insert(newDoc, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.insert(newDoc, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.insert(newDoc, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.insert(newDoc, cb);
-      break;
-    case DATAS_DB:
-      db.datas.insert(newDoc, cb);
-      break;
-    default:
-      break;
-  }
+  DBs[dbname].insert(newDoc, cb)
 }
 
-function update(dbname, query, updateQuery, options, cb) {
-  updateQuery = addTimeProperty(updateQuery, false);
+/**
+ * 更新-全量
+ * @param dbname
+ * @param query
+ * @param updateQuery 更新对象,*默认全量更新, 需要完整数据对象,不能单更新某个字段.
+ * 如果要更新单个字段需要设置成 {$set: { "data.satellites": 2, "data.red": true }}
+ * { $unset: { planet: true } } 用来删除字段
+ * 注意:要么全量更新,要么部分更新,不要修改_id字段.
+ * @param isPartlyUpdate 是否部分更新
+ * @param options
+ * 两个可选参数,multi 默认false,用于控制修改多个.
+ * upsert 默认 false,用于控制没有匹配到就新增机制.
+ * @param cb (err, numAffected, affectedDocuments, upsert)=>{}
+ */
+function update(dbname, query, updateQuery,isPartlyUpdate=false, options=null, cb) {
+  if (isPartlyUpdate){
+    updateQuery.$set.updated_at = date_utils.dateNow();
+  }else {
+    updateQuery = addTimeProperty(updateQuery, false,true);
+  }
   options = options || { multi: false, upsert: false };
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.update(query, updateQuery, options, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.update(query, updateQuery, options, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.update(query, updateQuery, options, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.update(query, updateQuery, options, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.update(query, updateQuery, options, cb);
-      break;
-    case DATAS_DB:
-      db.datas.update(query, updateQuery, options, cb);
-      break;
-    default:
-      break;
-  }
+  DBs[dbname].update(query, updateQuery, options, cb);
 }
 
-function update_set(dbname, query, updateQuery, options, cb) {
-  updateQuery.$set.updated_at = date_utils.dateNow();
-  options = options || { multi: false, upsert: false };
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.update(query, updateQuery, options, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.update(query, updateQuery, options, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.update(query, updateQuery, options, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.update(query, updateQuery, options, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.update(query, updateQuery, options, cb);
-      break;
-    case DATAS_DB:
-      db.datas.update(query, updateQuery, options, cb);
-      break;
-    default:
-      break;
-  }
+
+/**
+ * 移除数据
+ * @param dbname
+ * @param query
+ * @param options
+ * @param cb (err, n)=>{}
+ */
+function remove(dbname, query, cb) {
+  DBs[dbname].remove(query, {multi: true}, cb);
 }
 
-function remove(dbname, query, options, cb) {
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.remove(query, options, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.remove(query, options, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.remove(query, options, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.remove(query, options, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.remove(query, options, cb);
-      break;
-    case DATAS_DB:
-      db.datas.remove(query, options, cb);
-      break;
-    default:
-      break;
-  }
-}
-
+/**
+ * 查询多条,返回对应对象数组 [{_id:'xxxxx'}]
+ * @param dbname
+ * @param query
+ * @param cb (err, docs)=>{}
+ */
 function find(dbname, query, cb) {
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.find(query, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.find(query, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.find(query, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.find(query, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.find(query, cb);
-      break;
-    case DATAS_DB:
-      db.datas.find(query, cb);
-      break;
-    default:
-      break;
-  }
+  DBs[dbname].find(query, cb);
+}
+
+/**
+ * 朴素查询,不包含cb,可以进行后续的sort,skip,limit链式操作
+ * db.find({}).sort({ planet: 1 }).skip(1).limit(2).exec(function (err, docs) {
+ *   // docs is [{_id:'xxxxx'}, {_id:'xxxxx'}]
+ * });
+ * @param dbname
+ * @param query
+ */
+function pureFind(dbname,query){
+  return DBs[dbname].find(query)
 }
 
 function find_datas_by_sort(query,  cb) {
@@ -168,83 +129,49 @@ function find_datas_by_sort(query,  cb) {
 
 }
 
+/**
+ * 查询单条,返回对应对象 {_id:'xxxxx'}
+ * @param dbname
+ * @param query
+ * @param cb
+ */
 function findOne(dbname, query, cb) {
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      db.marktypes.findOne(query, cb);
-      break;
-    case GLOBAL_TYPES_DB:
-      db.globaltypes.findOne(query, cb);
-      break;
-    case RELATION_TYPES_DB:
-      db.relationtypes.findOne(query, cb);
-      break;
-    case DIALOGUE_TYPES_DB:
-      db.dialoguetypes.findOne(query, cb);
-      break;
-    case PROJECTS_DB:
-      db.projects.findOne(query, cb);
-      break;
-    case DATAS_DB:
-      db.datas.findOne(query, cb);
-      break;
-    default:
-      break;
-  }
+  DBs[dbname].findOne(query, cb);
 }
-
-function generate_find(dbname, query) {
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      return db.marktypes.find(query);
-    case GLOBAL_TYPES_DB:
-      return db.globaltypes.find(query);
-    case RELATION_TYPES_DB:
-      return db.relationtypes.find(query);
-    case DIALOGUE_TYPES_DB:
-      return db.dialoguetypes.find(query);
-    case PROJECTS_DB:
-      return db.projects.find(query);
-    case DATAS_DB:
-      return db.datas.find(query);
-    default:
-      break;
-  }
+/**
+ * 朴素查询单条,不包含cb,可以进行后续的sort,skip,limit链式操作
+ * db.findOne({}).sort({ planet: 1 }).skip(1).limit(2).exec(function (err, docs) {
+ *   // docs is {_id:'xxxxx'}
+ * });
+ * @param dbname
+ * @param query
+ */
+function pureFindOne(dbname,query){
+  return DBs[dbname].findOne(query)
 }
 
 function count(dbname,query,cb) {
-  switch (dbname) {
-    case MARK_TYPES_DB:
-      return db.marktypes.count(query,cb);
-    case GLOBAL_TYPES_DB:
-      return db.globaltypes.count(query,cb);
-    case RELATION_TYPES_DB:
-      return db.relationtypes.count(query,cb);
-    case DIALOGUE_TYPES_DB:
-      return db.dialoguetypes.count(query,cb);
-    case PROJECTS_DB:
-      return db.projects.count(query,cb);
-    case DATAS_DB:
-      return db.datas.count(query,cb);
-    default:
-      break;
-  }
+  DBs[dbname].count(query,cb);
 }
 
 export default {
+  LABELS_DB,
   MARK_TYPES_DB,
   GLOBAL_TYPES_DB,
   RELATION_TYPES_DB,
   DIALOGUE_TYPES_DB,
   PROJECTS_DB,
   DATAS_DB,
+  SYNCLOGS_DB,
+  DATALOGS_DB,
+  MEMBERS_DB,
   insert,
   remove,
   update,
-  update_set,
   find,
+  pureFind,
   findOne,
-  generate_find,
+  pureFindOne,
   find_datas_by_sort,
   count
 };

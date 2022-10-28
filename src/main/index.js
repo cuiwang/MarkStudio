@@ -1,4 +1,6 @@
 import { app, Menu, BrowserWindow } from 'electron';
+// 去掉安全警告
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 //引入update.js
 import { updateHandle } from '../update';
 /**
@@ -28,8 +30,10 @@ function createWindow() {
     minHeight: 768,
     //frame: false,//取消window自带的关闭最小化等
     //resizable: false, //禁止改变主窗口尺寸
-    title: '数据标注工具',
+    title: 'Mark Studio',
     useContentSize: true,
+    enableRemoteModule: true,
+    titleBarStyle:'hidden',
     webPreferences: {
       plugins: true,
       nativeWindowOpen: true, // ADD THIS

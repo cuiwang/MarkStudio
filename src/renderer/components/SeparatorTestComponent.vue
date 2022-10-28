@@ -28,6 +28,10 @@
 </template>
 
 <script>
+
+function abc() {
+//#82AAFF
+}
 export default {
   name: 'SeparatorTestComponent',
   props: {
