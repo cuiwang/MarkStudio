@@ -7,15 +7,16 @@
         <div :class="currectItemIndex==='/project'?'menu-active':'menu'" @click="onMenuClick('/project')">工程管理</div>
         <div class="w20"/>
         <div :class="currectItemIndex==='/label'?'menu-active':'menu'" @click="onMenuClick('/label')">标签组管理</div>
+        <div class="menu" style="color: #cccccc">插件中心</div>
         <div class="flex_1"/>
-        <div class="notification cursor_pointer" v-if="notifications.length>0">
+        <div v-if="notifications.length>0" class="notification cursor_pointer">
           <el-popover
               placement="bottom"
-              width="320"
-              trigger="click">
+              trigger="click"
+              width="320">
             <Notification :notifications.sync="notifications"/>
-            <div class="menu"
-                 slot="reference"
+            <div slot="reference"
+                 class="menu"
                  style="font-size: 16px"
             >
               <el-badge :value="notifications.length">
@@ -26,8 +27,8 @@
         </div>
         <div
             v-else
-            class="menu"
             slot="reference"
+            class="menu"
             style="font-size: 16px"
             @click="onMenuClick('/nc')"
         >
@@ -43,14 +44,14 @@
         </div>
         <div class="w20"/>
         <div class="user cursor_pointer">
-          <el-popover placement="top-start" title="" width="100" trigger="hover">
+          <el-popover placement="top-start" title="" trigger="hover" width="100">
             <!--信息展示 头像,昵称,邮箱-->
             <div v-if="userInfo" class="width_100 flex_row_allcenter">
               <div class="cursor_pointer" @click="onAvatorClick">
                 <el-avatar :src="userAvatar"></el-avatar>
-                <el-badge v-if="is_online" is-dot class="badge" type="success">
+                <el-badge v-if="is_online" class="badge" is-dot type="success">
                 </el-badge>
-                <el-badge v-else is-dot class="badge" type="danger">
+                <el-badge v-else class="badge" is-dot type="danger">
                 </el-badge>
               </div>
               <div class="w5"/>
@@ -198,14 +199,14 @@
                 <div class="cursor_pointer" @click="onLogoutClick">退出</div>
               </el-col>
             </el-row>
-            <div class="user_avatar" slot="reference">
+            <div slot="reference" class="user_avatar">
               <el-avatar :src="userAvatar" size="small"></el-avatar>
-              <el-badge v-if="is_online" is-dot class="badge" type="success">
+              <el-badge v-if="is_online" class="badge" is-dot type="success">
               </el-badge>
-              <el-badge  is-dot v-else-if="!is_online && userInfo" class="badge" type="danger">
+              <el-badge  v-else-if="!is_online && userInfo" class="badge" is-dot type="danger">
                 <span style="font-size: 8px" @click="doManualConnect">重连</span>
               </el-badge>
-              <el-badge  is-dot v-else class="badge" type="warning">
+              <el-badge  v-else class="badge" is-dot type="warning">
               </el-badge>
             </div>
           </el-popover>
@@ -225,14 +226,14 @@
   </div>
 </template>
 <script>
+import Darkmode from 'darkmode-js'
+import config from '../../../package.json'
+import Notification from '../components/Notification'
+import {Cons} from '../Constant'
+import {fetchGet, fetchPost} from '../libs/axiosService'
 // @ is an alias to /src
-import db_utils                                                                   from '../libs/db_utils'
-import Darkmode                                                                   from 'darkmode-js'
-import config                                                                     from '../../../package.json'
-import {Cons}                                                                     from '../Constant'
-import {fetchGet, fetchPost}                                                      from '../libs/axiosService'
+import db_utils from '../libs/db_utils'
 import {doProjectBasicSync, doProjectDataSync, doProjectLabelSync, doSettingSync} from '../libs/sync_utils'
-import Notification                                                               from '../components/Notification'
 
 require('electron-disable-file-drop')
 export default {

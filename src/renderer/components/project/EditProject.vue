@@ -1,24 +1,24 @@
 <template>
   <div>
     <el-dialog v-if="projectForm"
-               title="修改工程"
-               :visible.sync="showDialog"
-               :show-close="false"
                :close-on-click-modal="false"
-               :close-on-press-escape="false">
+               :close-on-press-escape="false"
+               :show-close="false"
+               :visible.sync="showDialog"
+               title="修改工程">
       <el-form ref="projectForm" :model="projectForm" label-width="140px">
         <el-form-item label="工程名称" required>
           <el-input v-model="projectForm.name"
-                    clearable
                     :maxlength="10"
-                    show-word-limit
-                    placeholder="请输入工程名称"></el-input>
+                    clearable
+                    placeholder="请输入工程名称"
+                    show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input clearable
-                    v-model="projectForm.description"
-                    placeholder="请填写描述,方便理解和解释"
+          <el-input v-model="projectForm.description"
+                    clearable
                     maxlength="80"
+                    placeholder="请填写描述,方便理解和解释"
                     show-word-limit></el-input>
         </el-form-item>
         <el-divider/>
@@ -27,34 +27,34 @@
             <el-checkbox v-for="type in Object.values(WorkingTypeName)" :key="type" :label="type"></el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item required label="实体标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.ENTITY])">
+        <el-form-item v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.ENTITY])" label="实体标注标签组" required>
           <el-select v-model="projectForm.markTypeId"
-                     @change="onEntityTypeChanged"
-                     placeholder="请选择实体标注标签组,自定义标注请在对应管理页面配置">
+                     placeholder="请选择实体标注标签组,自定义标注请在对应管理页面配置"
+                     @change="onEntityTypeChanged">
             <el-option v-for="(markType, index) in markTypeDatas"
                        :key="index"
                        :label="markType.name"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item required label="文本分类标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.CLASSIFY])">
-          <el-select v-model="projectForm.globalTypeId" @change="onGlobalTypeChanged" placeholder="下拉选择需要的文本分类标签组">
+        <el-form-item v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.CLASSIFY])" label="文本分类标签组" required>
+          <el-select v-model="projectForm.globalTypeId" placeholder="下拉选择需要的文本分类标签组" @change="onGlobalTypeChanged">
             <el-option v-for="(markType, index) in globalTypeDatas"
                        :key="index"
                        :label="markType.name"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item required label="关系标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.RELATION])">
-          <el-select v-model="projectForm.relationTypeId" @change="onRelationTypeChanged" placeholder="下拉选择需要的关系标注标签组">
+        <el-form-item v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.RELATION])" label="关系标注标签组" required>
+          <el-select v-model="projectForm.relationTypeId" placeholder="下拉选择需要的关系标注标签组" @change="onRelationTypeChanged">
             <el-option v-for="(markType, index) in relationTypeDatas"
                        :key="index"
                        :label="markType.name"
                        :value="markType._id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item required label="对话标注标签组" v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.DIALOGUE])">
-          <el-select v-model="projectForm.dialogueTypeId" @change="onDialogueTypeChanged" placeholder="下拉选择需要的对话标注标签组">
+        <el-form-item v-if="doCheckMarkTypeIsActived(WorkingTypeName[WorkingType.DIALOGUE])" label="对话标注标签组" required>
+          <el-select v-model="projectForm.dialogueTypeId" placeholder="下拉选择需要的对话标注标签组" @change="onDialogueTypeChanged">
             <el-option v-for="(markType, index) in dialogueTypeDatas"
                        :key="index"
                        :label="markType.name"
@@ -77,19 +77,19 @@
                    :model="projectForm.datasource_info"
                    label-width="80px">
             <div class="h10"></div>
-            <el-form-item required label="主机地址">
+            <el-form-item label="主机地址" required>
               <el-input v-model="projectForm.datasource_info.host" placeholder="127.0.0.1"></el-input>
             </el-form-item>
-            <el-form-item required label="端口号">
+            <el-form-item label="端口号" required>
               <el-input v-model="projectForm.datasource_info.port" placeholder="3306"></el-input>
             </el-form-item>
-            <el-form-item required label="用户名">
+            <el-form-item label="用户名" required>
               <el-input v-model="projectForm.datasource_info.user" placeholder="请填写有读写下面数据库权限的账号"></el-input>
             </el-form-item>
-            <el-form-item required label="密码">
+            <el-form-item label="密码" required>
               <el-input v-model="projectForm.datasource_info.password" placeholder="请填写密码"></el-input>
             </el-form-item>
-            <el-form-item required label="数据库名">
+            <el-form-item label="数据库名" required>
               <el-input v-model="projectForm.datasource_info.database" placeholder="请填写有读写权限的数据库名"></el-input>
             </el-form-item>
             <el-alert
@@ -98,15 +98,15 @@
             >
             </el-alert>
             <div class="h10"></div>
-            <el-form-item required label="表名">
+            <el-form-item label="表名" required>
               <el-input v-model="projectForm.datasource_info.table" placeholder="请填写数据源表名"></el-input>
             </el-form-item>
-            <el-form-item required label="字段名">
+            <el-form-item label="字段名" required>
               <el-input v-model="projectForm.datasource_info.column" placeholder="请填写数据对应在表中的字段名"></el-input>
             </el-form-item>
             <el-form-item label="字符集">
-              <el-input disabled
-                        v-model="projectForm.datasource_info.charset"
+              <el-input v-model="projectForm.datasource_info.charset"
+                        disabled
                         placeholder="默认：'UTF8_GENERAL_CI'"></el-input>
             </el-form-item>
             <el-form-item>
@@ -122,19 +122,19 @@
                    :model="projectForm.datasource_info"
                    label-width="80px">
             <div class="h10"></div>
-            <el-form-item required label="主机地址">
+            <el-form-item label="主机地址" required>
               <el-input v-model="projectForm.datasource_info.host" placeholder="127.0.0.1"></el-input>
             </el-form-item>
-            <el-form-item required label="端口号">
+            <el-form-item label="端口号" required>
               <el-input v-model="projectForm.datasource_info.port" placeholder="3306"></el-input>
             </el-form-item>
-            <el-form-item required label="用户名">
+            <el-form-item label="用户名" required>
               <el-input v-model="projectForm.datasource_info.user" placeholder="请填写有读写下面数据库权限的账号"></el-input>
             </el-form-item>
-            <el-form-item required label="密码">
+            <el-form-item label="密码" required>
               <el-input v-model="projectForm.datasource_info.password" placeholder="请填写密码"></el-input>
             </el-form-item>
-            <el-form-item required label="数据库名">
+            <el-form-item label="数据库名" required>
               <el-input v-model="projectForm.datasource_info.database" placeholder="请填写有读写权限的数据库名"></el-input>
             </el-form-item>
             <el-alert
@@ -143,10 +143,10 @@
             >
             </el-alert>
             <div class="h10"></div>
-            <el-form-item required label="集合名">
+            <el-form-item label="集合名" required>
               <el-input v-model="projectForm.datasource_info.table" placeholder="请填写数据源集合名"></el-input>
             </el-form-item>
-            <el-form-item required label="字段名">
+            <el-form-item label="字段名" required>
               <el-input v-model="projectForm.datasource_info.column" placeholder="请填写数据对应在集合中的字段名"></el-input>
             </el-form-item>
             <el-form-item>
@@ -164,23 +164,23 @@
           </el-form-item>
           <div v-show="isAppendDatas">
             <el-form-item label="字符集选择">
-              <el-select v-model="encoding" @change="onEncodingChanged" placeholder="默认字符集utf-8">
+              <el-select v-model="encoding" placeholder="默认字符集utf-8" @change="onEncodingChanged">
                 <el-option v-for="(encode, index) in encodings" :key="index" :label="encode" :value="encode"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="数据文件" required v-loading="isReadingFile">
+            <el-form-item v-loading="isReadingFile" label="数据文件" required>
               <div class="flex_row align_center" style="justify-content: flex-start">
                 <el-upload
-                    action="/"
+                    :auto-upload="false"
+                    :before-upload="beforeSourceUpload"
                     :file-list="sourcefileList"
-                    :on-change="handleSourceChange"
                     :limit="1"
-                    accept=".txt,.TXT"
+                    :multiple="false"
+                    :on-change="handleSourceChange"
                     :on-exceed="handleSourceExceed"
                     :on-remove="handleSourceRemove"
-                    :before-upload="beforeSourceUpload"
-                    :auto-upload="false"
-                    :multiple="false"
+                    accept=".txt,.TXT"
+                    action="/"
                 >
                   <div class="flex_row align_center">
                     <el-button size="small" type="info">点击上传txt数据</el-button>
@@ -201,8 +201,8 @@
               <span style="font-weight: bold; color: #ff7c00">{{uploadOriginalDatas.length}}</span>
               条数据.前5条:
             </div>
-            <div style="overflow: hidden; text-overflow: ellipsis"
-                 v-for="(item, index) in uploadOriginalDatas.slice(0, 5)">{{index + 1}} . {{item}}
+            <div v-for="(item, index) in uploadOriginalDatas.slice(0, 5)"
+                 style="overflow: hidden; text-overflow: ellipsis">{{index + 1}} . {{item}}
             </div>
           </el-form-item>
         </template>
@@ -216,12 +216,12 @@
   </div>
 </template>
 <script>
-import db_utils                from '../../libs/db_utils'
-import fs                      from 'fs'
-import readline                from 'readline'
-import {Cons}                  from '../../Constant'
-import DBHelper                from '../../libs/mysqlHelper'
-import MongoHelper             from '../../libs/mongoHelper'
+import fs from 'fs'
+import readline from 'readline'
+import {Cons} from '../../Constant'
+import db_utils from '../../libs/db_utils'
+import MongoHelper from '../../libs/mongoHelper'
+import DBHelper from '../../libs/mysqlHelper'
 import {getCloudProjectLabels} from '../../libs/project_utils'
 
 export default {
@@ -467,7 +467,7 @@ export default {
           // 获取最后一条的Index
           db_utils.find_datas_by_sort({project_id: this.projectForm._id}, (err, docs) => {
             const max_index = docs[0].index
-            if (max_index) {
+            if (max_index>=0) {
               this.uploadOriginalDatas.forEach((content, index) => {
                 let _data = JSON.parse(JSON.stringify(Cons.DATA_TEMPLATE))
                 _data.project_id = this.projectForm._id
@@ -484,6 +484,8 @@ export default {
                 this.$events.emit('EDIT_PROJECT_SUCESS')
                 this.$emit('cancelButtonClick')
               })
+            }else {
+              this.showMessageWithText('数据库异常,'+JSON.stringify(docs[0]))
             }
           })
         }

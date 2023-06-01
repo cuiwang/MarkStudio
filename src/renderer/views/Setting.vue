@@ -23,7 +23,7 @@
           <span :class="menu==='update'?'menu-active':'menu'" @click="onMenuClick('update')">更新设置</span>
         </div>
         <div class="right_content">
-          <div class="text_left" v-if="menu==='common'">
+          <div v-if="menu==='common'" class="text_left">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>通用设置</span>
@@ -35,17 +35,17 @@
               <el-divider>字体配置</el-divider>
               <div class="margin_10">
                 <el-alert
-                    title="请填写CSS5支持的相关字体属性"
-                    description="字体大小示例（默认1.2rem): 12px 或 1.2rem 等; 字体颜色示例(默认#333333): #000000 ;"
-                    type="info"
                     :closable="false"
-                    effect="light">
+                    description="字体大小示例（默认1.2rem): 12px 或 1.2rem 等; 字体颜色示例(默认#333333): #000000 ;"
+                    effect="light"
+                    title="请填写CSS5支持的相关字体属性"
+                    type="info">
                 </el-alert>
               </div>
               <div class="normal_text_size main_text_color padding_10 flex_row align_center">
                   <el-form :inline="true">
                     <el-form-item label="内容字体大小:">
-                  <el-input size="small"   v-model="defaultFontSize" placeholder="16px/1.2rem"></el-input>
+                  <el-input v-model="defaultFontSize"   placeholder="16px/1.2rem" size="small"></el-input>
                     </el-form-item>
                     <el-form-item>
                       <el-button size="small"  type="primary" @click="setFontSize(defaultFontSize)">修改</el-button>
@@ -55,7 +55,7 @@
               <div class="normal_text_size main_text_color padding_10 flex_row align_center">
                 <el-form :inline="true">
                   <el-form-item label="内容字体颜色:">
-                    <el-input size="small" v-model="defaultFontColor" placeholder="#333333"></el-input>
+                    <el-input v-model="defaultFontColor" placeholder="#333333" size="small"></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button size="small"  type="primary" @click="setFontColor(defaultFontColor)">修改</el-button>
@@ -65,7 +65,7 @@
               <div class="normal_text_size main_text_color padding_10 flex_row align_center">
                 <el-form :inline="true">
                   <el-form-item label="标注字体大小:">
-                    <el-input size="small"   v-model="defaultMarkFontSize" placeholder="14px/1.2rem"></el-input>
+                    <el-input v-model="defaultMarkFontSize"   placeholder="14px/1.2rem" size="small"></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button size="small"  type="primary" @click="setMarkFontSize(defaultMarkFontSize)">修改</el-button>
@@ -74,7 +74,7 @@
               </div>
             </el-card>
           </div>
-          <div class="text_left" v-if="menu==='entity'">
+          <div v-if="menu==='entity'" class="text_left">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>实体标注设置</span>
@@ -82,7 +82,7 @@
               <div class="normal_text_size main_text_color padding_10">
                 标注效果:
                 <el-radio-group v-model="defaultEntityRenderType" @change="onDefaultEntityRenderTypeChange">
-                  <el-radio label="highlight">高亮框</el-radio>
+                  <el-radio label="highlight" style="margin-right: 10px">高亮框</el-radio>
                   <el-radio label="underline">下划线</el-radio>
                 </el-radio-group>
               </div>
@@ -93,7 +93,7 @@
             </el-card>
 
           </div>
-          <div class="text_left" v-if="menu==='relation'">
+          <div v-if="menu==='relation'" class="text_left">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>关系标注设置</span>
@@ -113,16 +113,26 @@
               <div class="normal_text_size main_text_color padding_10 flex_row align_center">
                 <el-form :inline="true">
                   <el-form-item label="设置标注连线宽度:">
-                    <el-input size="small"  type="number" v-model="defaultLeaderLineWidth" placeholder="默认宽度 2"></el-input>
+                    <el-input v-model="defaultLeaderLineWidth"  placeholder="默认宽度 2" size="small" type="number"></el-input>
                   </el-form-item>
                   <el-form-item>
                     <el-button size="small"  type="primary" @click="setLeaderLineWidth(defaultLeaderLineWidth)">修改</el-button>
                   </el-form-item>
                 </el-form>
               </div>
+              <div class="normal_text_size main_text_color padding_10 flex_row align_center">
+                <el-form :inline="true">
+                  <el-form-item label="设置连线动画时长(ms):">
+                    <el-input v-model="defaultDuration"  placeholder="默认1200" size="small" type="number"></el-input>
+                  </el-form-item>
+                  <el-form-item>
+                    <el-button size="small"  type="primary" @click="setDuration(defaultDuration)">修改</el-button>
+                  </el-form-item>
+                </el-form>
+              </div>
             </el-card>
           </div>
-          <div class="text_left" v-if="menu === 'update'">
+          <div v-if="menu === 'update'" class="text_left">
             <el-card class="box-card" shadow="never">
               <div slot="header" class="clearfix">
                 <span>更新设置</span>
@@ -137,8 +147,8 @@
               </div>
               <div class="normal_text_size main_text_color padding_10">
                 最新安装包地址:
-                <el-link href="https://cuiwang.github.io/DatasMark/"
-                         target="_blank">https://cuiwang.github.io/DatasMark/
+                <el-link href="http://ms.youdongtai.com/"
+                         target="_blank">http://ms.youdongtai.com
                 </el-link>
               </div>
             </el-card>
@@ -166,6 +176,7 @@ export default {
       defaultLeaderLineWidth: 2,
       defaultFontSize: '1.2rem',
       defaultFontColor: '#333333',
+      defaultDuration: 1200,
       defaultMarkFontSize: '1.2rem',
       menu: 'common'
     }
@@ -182,6 +193,7 @@ export default {
     this.defaultLeaderLineWidth = localStorage.getItem('defaultLeaderLineWidth') || 2
     this.defaultFontSize = localStorage.getItem('defaultFontSize') || '1.2rem'
     this.defaultFontColor = localStorage.getItem('defaultFontColor') || '#333333'
+    this.defaultDuration = localStorage.getItem('defaultDuration') || 1200
     this.defaultMarkFontSize = localStorage.getItem('defaultMarkFontSize') || '1.2rem'
   },
   methods: {
@@ -234,6 +246,11 @@ export default {
     setFontColor(val) {
       this.$message.success('修改成功!')
       localStorage.setItem('defaultFontColor', val)
+      this.doLocalSync(Cons.SyncLogType.SETTING)
+    },
+    setDuration(val) {
+      this.$message.success('修改成功!')
+      localStorage.setItem('defaultDuration', val)
       this.doLocalSync(Cons.SyncLogType.SETTING)
     },
     setMarkFontSize(val) {

@@ -1,17 +1,16 @@
-import Vue from 'vue';
-
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-import 'element-ui/lib/theme-chalk/display.css';
-import App from './App.vue';
-import router from './router';
-import store from './store'
-import EventEmitter from 'events';
+import {dragMixin} from '/libs/disableDragMixin'
 import * as dayjs from 'dayjs'
-import * as relativeTime from 'dayjs/plugin/relativeTime' // import plugin
 import 'dayjs/locale/zh-cn' // import locale
+import * as relativeTime from 'dayjs/plugin/relativeTime' // import plugin
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/display.css'
+import 'element-ui/lib/theme-chalk/index.css'
+import EventEmitter from 'events'
+import Vue from 'vue'
+import App from './App.vue'
 import mixin from './libs/mixin'
-
+import router from './router'
+import store from './store'
 
 dayjs.extend(relativeTime) // use plugin
 dayjs.locale('zh-cn') // use locale
@@ -22,7 +21,7 @@ Vue.use(ElementUI);
 Vue.prototype.$events = new EventEmitter();
 Vue.config.productionTip = false;
 Vue.mixin({
-  mixins: [mixin],
+  mixins: [mixin,dragMixin],
 })
 
 /*

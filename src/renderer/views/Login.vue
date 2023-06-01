@@ -1,6 +1,6 @@
 <template>
   <div class="flex_col_allcenter height_100">
-    <div class="el-card" style="height: 80%;width: 70%" :body-style="{height:'100%'}">
+    <div :body-style="{height:'100%'}" class="el-card" style="height: 80%;width: 70%">
       <div class="flex_row_allcenter height_100">
         <div class="flex_col flex_1 height_100" style="background: #ffffff">
           <div class="flex_1"></div>
@@ -15,16 +15,15 @@
             <div class="h20"></div>
             <div class="text_left normal_text_size">密码</div>
             <div class="h10"></div>
-            <div><el-input v-model="password" show-password clearable placeholder="请输入密码"></el-input></div>
+            <div><el-input v-model="password" clearable placeholder="请输入密码" show-password></el-input></div>
             <div class="h20"></div>
             <div class="cursor_pointer text_right description_text_color description_text_size" @click="onForgetClick">忘记密码?</div>
             <div class="h20"></div>
-            <el-button type="primary" :loading="showLoading" @click="onLoginButtonClick">登录</el-button>
+            <el-button :loading="showLoading" type="primary" @click="onLoginButtonClick">登录</el-button>
             <div class="h20"></div>
             <div class="normal_text_size flex_row_allcenter">还没有账号? <el-link type="info" @click="onRegisterClick">点击注册</el-link></div>
           </div>
           <div class="flex_1"></div>
-          <div class="text_left description_text_size description_text_color margin_20">© Choi Wan 2077</div>
         </div>
         <div class="flex_1 height_100 flex_col_allcenter right_container">
           <img src="../assets/logo_1024.png" width="35%">
@@ -37,10 +36,9 @@
   </div>
 </template>
 <script>
-import config                from '../../../package.json'
-import {fetchGet, fetchPost} from '../libs/axiosService'
-import axios                 from 'axios'
-import {Cons}                from '../Constant'
+import config from '../../../package.json'
+import {Cons} from '../Constant'
+import {fetchPost} from '../libs/axiosService'
 
 const { shell } = require('electron')
 

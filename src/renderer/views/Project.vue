@@ -14,34 +14,34 @@
         </div>
       </el-card>
     </div>
-    <div style="height: 100px"></div>
+    <div style="height: 100px;flex-shrink: 0"></div>
     <!--  工程列表  -->
     <div class="project-warp margin_bottom_10 padding_0_10">
-      <div class="project-warp-item margin_top_10" v-for="(project, index) in projects" :key="project._id">
+      <div v-for="(project, index) in projects" :key="project._id" class="project-warp-item margin_top_10">
         <el-card
-            :class="project['cloud']?'cloud_bg':''"
-                 :shadow="project.working ? 'always' : 'hover'"
-                 v-loading="isWorking && project.working ">
+            v-loading="isWorking && project.working "
+                 :class="project['cloud']?'cloud_bg':''"
+                 :shadow="project.working ? 'always' : 'hover'">
           <div slot="header" class="clearfix flex_row_allcenter">
             <div :class="project.working?'green_dot':'gray_dot'"></div>
             <div style="float: left"> {{project.name}}</div>
             <el-divider direction="vertical"></el-divider>
-            <el-button @click="activeProject(project._id)"
+            <el-button :disabled="project.working || (!project.init&&project.cloud===1)"
                        type="text"
-                       :disabled="project.working || (!project.init&&project.cloud===1)">{{project.working ? '工作中' : '激活工程'}}
+                       @click="activeProject(project._id)">{{project.working ? '工作中' : '激活工程'}}
             </el-button>
             <div class="flex_1"></div>
-            <el-button v-if="project['_id']==='-1'" disabled @click="activeCloud(project)"
-                       type="text"
+            <el-button v-if="project['_id']==='-1'" disabled type="text"
+                       @click="activeCloud(project)"
             >激活云服务</el-button>
-            <el-button v-else-if="!project['cloud']" @click="activeCloud(project)"
-                       type="text"
+            <el-button v-else-if="!project['cloud']" type="text"
+                       @click="activeCloud(project)"
             >激活云服务</el-button>
             <el-button v-else
                        type="text"
             >
               <img v-if="project.init" src="../assets/cloud_icon.png" width="16">
-              <img v-else style="filter: grayscale(80%)" src="../assets/cloud_icon.png" width="16">
+              <img v-else src="../assets/cloud_icon.png" style="filter: grayscale(80%)" width="16">
             </el-button>
           </div>
           <!--描述内容-->
@@ -56,7 +56,7 @@
              <el-row>
                <el-col>
                  <el-progress v-if="project.working" :percentage="getPercentage(project)"></el-progress>
-                 <el-progress v-else color="#999999" :percentage="getPercentage(project)"></el-progress>
+                 <el-progress v-else :percentage="getPercentage(project)" color="#999999"></el-progress>
                </el-col>
              </el-row>
              <div class="h10"></div>
@@ -69,7 +69,7 @@
                    <span>{{project.num.marked}}/
                      <span :class="project.num.total===0?'warnning_num':''">{{project.num.total}}</span>
                    </span>
-                   <el-tooltip class="item" effect="dark" content="已完成数/总数" placement="top">
+                   <el-tooltip class="item" content="已完成数/总数" effect="dark" placement="top">
                      <i class="el-icon-question description_text_color"></i>
                    </el-tooltip>
                  </div>
@@ -89,7 +89,7 @@
                          <div>实体标注</div>
                        </el-col>
                        <el-col :span="16">
-                         <el-tag type="info" effect="light">
+                         <el-tag effect="light" type="info">
                            {{project.markTypeName}}
                          </el-tag>
                        </el-col>
@@ -100,7 +100,7 @@
                          <div>分类标注</div>
                        </el-col>
                        <el-col :span="16">
-                         <el-tag type="info" effect="light">{{
+                         <el-tag effect="light" type="info">{{
                              getMaxString(project.globalTypeName) || '-'
                            }}
                          </el-tag>
@@ -112,7 +112,7 @@
                          <div>关系标注</div>
                        </el-col>
                        <el-col :span="16">
-                         <el-tag type="info" effect="light">{{
+                         <el-tag effect="light" type="info">{{
                              getMaxString(project.relationTypeName) || '-'
                            }}
                          </el-tag>
@@ -124,7 +124,7 @@
                          <div>对话标注</div>
                        </el-col>
                        <el-col :span="16">
-                         <el-tag type="info" effect="light">{{
+                         <el-tag effect="light" type="info">{{
                              getMaxString(project.dialogueTypeName) || '-'
                            }}
                          </el-tag>
@@ -153,15 +153,15 @@
                    <div class="flex_row_allcenter">
                      <div class="flex_1">
                        <el-tag v-if="!project.working"
-                               type="info"
-                               effect="light">{{getDatasetType(project.datasource_radio)}}
+                               effect="light"
+                               type="info">{{getDatasetType(project.datasource_radio)}}
                        </el-tag>
                        <el-tag v-else effect="light">{{getDatasetType(project.datasource_radio)}}</el-tag>
                      </div>
                      <span v-show="project.datasource_radio==='3'" class="description_text_color">
                        <el-tooltip class="item"
-                                   effect="dark"
                                    content="Mysql数据服务需要用户事先定义数据，具体步骤请在帮助中心查看！"
+                                   effect="dark"
                                    placement="left">
                          <i class="el-icon-info"></i>
                        </el-tooltip>
@@ -186,22 +186,22 @@
                <div class="h5"></div>
                <!--mysql-->
                <el-row v-if="project.dataSync && project.datasource_radio && project.datasource_radio==='3'">
-                 <el-col :span="16" :offset="8">
+                 <el-col :offset="8" :span="16">
                    <div class="flex_row_allcenter">
                      <el-button-group>
                        <el-button :disabled="!project.working"
+                                  icon="el-icon-download"
+                                  round
                                   size="medium"
                                   type=""
-                                  round
-                                  @click="onSyncMysqlToLocalClick(project)"
-                                  icon="el-icon-download">同步到本地
+                                  @click="onSyncMysqlToLocalClick(project)">同步到本地
                        </el-button>
                        <el-button :disabled="!project.working"
+                                  icon="el-icon-upload"
+                                  round
                                   size="medium"
                                   type=""
-                                  round
-                                  @click="onSyncToMysqlServerClick(project)"
-                                  icon="el-icon-upload">上传到远端
+                                  @click="onSyncToMysqlServerClick(project)">上传到远端
                        </el-button>
                      </el-button-group>
                    </div>
@@ -222,22 +222,22 @@
                </el-row>
                <!--mongodb-->
                <el-row v-if="project.dataSync && project.datasource_radio && project.datasource_radio==='4'">
-                 <el-col :span="16" :offset="8">
+                 <el-col :offset="8" :span="16">
                    <div class="flex_row_allcenter">
                      <el-button-group>
                        <el-button :disabled="!project.working"
+                                  icon="el-icon-download"
+                                  round
                                   size="medium"
                                   type=""
-                                  round
-                                  @click="onSyncMongoDBToLocalClick(project)"
-                                  icon="el-icon-download">同步到本地
+                                  @click="onSyncMongoDBToLocalClick(project)">同步到本地
                        </el-button>
                        <el-button :disabled="!project.working"
+                                  icon="el-icon-upload"
+                                  round
                                   size="medium"
                                   type=""
-                                  round
-                                  @click="onSyncToMongoDBServerClick(project)"
-                                  icon="el-icon-upload">上传到远端
+                                  @click="onSyncToMongoDBServerClick(project)">上传到远端
                        </el-button>
                      </el-button-group>
                    </div>
@@ -283,10 +283,10 @@
                  <el-col :span="24">
                    <div class="flex_row align_center padding_10" style="background-color: #f5f5f5;border-radius: 5px;overflow: auto">
                      <div class="flex_1 flex_row align_center">
-                       <div class="member_avatar" v-for="(member,index) in project.members" :key="index">
-                         <el-badge v-if="member.status===MEMBER_STATUS.NORMAL" type="success" is-dot class="member_avatar_badge"> <i v-if="member.role === ROLE.MANAGER" class="member_owner el-icon-star-on"></i> <el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
-                         <el-badge v-else-if="member.status===MEMBER_STATUS.REJECT" type="danger" is-dot class="member_avatar_badge"><el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
-                         <el-badge v-else type="warning" is-dot class="member_avatar_badge"><el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
+                       <div v-for="(member,index) in project.members" :key="index" class="member_avatar">
+                         <el-badge v-if="member.status===MEMBER_STATUS.NORMAL" class="member_avatar_badge" is-dot type="success"> <i v-if="member.role === ROLE.MANAGER" class="member_owner el-icon-star-on"></i> <el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
+                         <el-badge v-else-if="member.status===MEMBER_STATUS.REJECT" class="member_avatar_badge" is-dot type="danger"><el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
+                         <el-badge v-else class="member_avatar_badge" is-dot type="warning"><el-avatar  :src="BASE_URL+member.avatar"></el-avatar></el-badge>
                        </div>
                        <span v-if="project.project_owner_id === user_id" class="member_add_icon" @click="addMemberToProject(project)"><img src="../assets/member_add.png" width="18"></span>
                        <span v-else class="member_add_icon" @click="exitMemberToProject(project)"><img src="../assets/member_exit.png" width="18"></span>
@@ -301,8 +301,8 @@
              <el-divider></el-divider>
              <div class="flex_row">
                <el-button-group >
-                 <el-button v-if="!project['cloud']||(project['cloud']&&project.project_owner_id===user_id)" size="medium" type="" icon="el-icon-edit" @click="editProject(project)">修改</el-button>
-                 <el-button size="medium" type="" icon="el-icon-delete" @click="deleteProject(project)">删除</el-button>
+                 <el-button v-if="!project['cloud']||(project['cloud']&&project.project_owner_id===user_id)" icon="el-icon-edit" size="medium" type="" @click="editProject(project)">修改</el-button>
+                 <el-button icon="el-icon-delete" size="medium" type="" @click="deleteProject(project)">删除</el-button>
                </el-button-group>
                <div class="flex_1"></div>
                <el-button v-if="!project['cloud']" :loading="isSaving" size="medium" @click="exportProject(project)">导出工程</el-button>
@@ -317,10 +317,10 @@
               <span class="h10"></span>
               <span class="description_text_size description_text_color">请点击初始化按钮，将数据同步到本地。</span>
               <span class="h30"></span>
-              <el-button type="primary"  round :loading="project.loading" @click="doInitCloudProject(project,index)"><i class="el-icon-sunset"/> 初始化</el-button>
+              <el-button :loading="project.loading"  round type="primary" @click="doInitCloudProject(project,index)"><i class="el-icon-sunset"/> 初始化</el-button>
               <div class="flex_1"></div>
               <div class="flex_row width_100">
-                <el-button size="medium" type="" icon="el-icon-delete" @click="deleteProject(project)">删除</el-button>
+                <el-button icon="el-icon-delete" size="medium" type="" @click="deleteProject(project)">删除</el-button>
                 <div class="flex_1"></div>
               </div>
 
@@ -336,44 +336,49 @@
     <ImportProject :show-dialog="needShowImportProjectView"
                    @cancelButtonClick="(needShowImportProjectView = false) && (project = {})"></ImportProject>
     <!--编辑工程弹框-->
-    <EditProject :show-dialog="needShowEditProjectView"
-                 :project="project"
+    <EditProject :project="project"
+                 :show-dialog="needShowEditProjectView"
                  @cancelButtonClick="(needShowEditProjectView = false) && (project = {})"></EditProject>
     <!--  导出工程数据 -->
-    <ExprotProject :show-dialog="needShowExportView"
-                   :project="project"
+    <ExprotProject :project="project"
+                   :show-dialog="needShowExportView"
                    @cancelButtonClick="(needShowExportView = false) && (project = {})"></ExprotProject>
     <!--  激活云服务-->
-    <CloudProject :show-dialog="needShowCloudProjectView"
-                  :project="project"
+    <CloudProject :project="project"
+                  :show-dialog="needShowCloudProjectView"
                   @cancelButtonClick="(needShowCloudProjectView = false) && (project = {})"
                   @syncFinish="syncCloudProjectFinished"
     ></CloudProject>
   <!-- 添加成员 -->
     <ProjectMember
         v-if="project"
+        :prop_project="project"
         :show-dialog="needShowProjectMemberView"
-        @cancelButtonClick="needShowProjectMemberView = false"
-        :prop_project="project"></ProjectMember>
+        @cancelButtonClick="needShowProjectMemberView = false"></ProjectMember>
 
   </div>
 </template>
 <script>
-import db_utils      from '../libs/db_utils'
-import NewProject              from '../components/project/NewProject'
-import ExprotProject                              from '../components/project/ExprotProject'
-import FileSaver                                  from 'file-saver'
-import EditProject                                from '../components/project/EditProject'
-import ImportProject                              from '../components/project/ImportProject'
-import DBHelper                                   from '../libs/mysqlHelper'
-import date_utils                                 from '../libs/date_utils'
-import MongoHelper                                from '../libs/mongoHelper'
-import CloudProject                               from '../components/project/CloudProject'
-import {fetchGet, HTTP}                           from '../libs/axiosService'
-import {Cons}                                                             from '../Constant'
+import FileSaver from 'file-saver'
+import CloudProject from '../components/project/CloudProject'
+import EditProject from '../components/project/EditProject'
+import ExprotProject from '../components/project/ExprotProject'
+import ImportProject from '../components/project/ImportProject'
+import NewProject from '../components/project/NewProject'
+import ProjectMember from '../components/project/ProjectMember'
+import {Cons} from '../Constant'
+import {HTTP} from '../libs/axiosService'
+import date_utils from '../libs/date_utils'
+import db_utils from '../libs/db_utils'
+import MongoHelper from '../libs/mongoHelper'
+import DBHelper from '../libs/mysqlHelper'
 import {getCloudProjectLabels, getCloudProjectMembers, getNumFromProject} from '../libs/project_utils'
-import ProjectMember                                                      from '../components/project/ProjectMember'
-import {doDownloadProjectBasic, doDownloadProjectData, doDownloadProjectLabel, doDownloadProjectMembers} from '../libs/sync_utils'
+import {
+  doDownloadProjectBasic,
+  doDownloadProjectData,
+  doDownloadProjectLabel,
+  doDownloadProjectMembers
+} from '../libs/sync_utils'
 
 export default {
   name: 'Project',
@@ -613,7 +618,6 @@ export default {
               type: 'danger'
             })
             .then(() => {
-              if (this.is_online){
                 // 在线删除项目后离线删除项目
                 HTTP.before(() => {
                       project.working = true
@@ -630,14 +634,6 @@ export default {
                   this.showLocalNotification('项目已删除','success')
                   this.initData()//重新加载数据
                 })
-
-              }else {
-                this.$message({
-                  type: 'error',
-                  message: '对不起,云服务项目请在有网络情况下删除!',
-                  offset: 70
-                })
-              }
             })
             .catch(() => {
               this.$message({

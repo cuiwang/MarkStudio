@@ -1,9 +1,10 @@
 <template>
   <el-dialog
-      title="激活云服务"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      custom-class="active_cloud_dialog"  width="40%" :visible.sync="showDialog" :show-close="false">
+      :destroy-on-close="true"
+      :show-close="false"
+      :visible.sync="showDialog"  custom-class="active_cloud_dialog" title="激活云服务" width="40%">
     <div slot="title" >
       <!--icon-->
       <div class="flex_row_allcenter hugetitle_text_size white_color">
@@ -63,23 +64,23 @@
         <!-- 分三步 -->
         <!-- 准备数据时的动画提示,每一步都要 -->
         <!-- 使用步骤条+骨架屏 -->
-        <el-steps align-center :active="processing_active" finish-status="success" simple>
-          <el-step title="标注组" icon="el-icon-upload">
+        <el-steps :active="processing_active" align-center finish-status="success" simple>
+          <el-step icon="el-icon-upload" title="标注组">
           </el-step>
-          <el-step title="作业数据" icon="el-icon-upload">
+          <el-step icon="el-icon-upload" title="作业数据">
           </el-step>
-          <el-step title="基础数据" icon="el-icon-upload">
+          <el-step icon="el-icon-upload" title="基础数据">
           </el-step>
         </el-steps>
         <div class="h10"></div>
         <el-alert
-            :title="processCloudTipString"
-            type="info"
-            center
             :closable="false"
+            :title="processCloudTipString"
+            center
+            type="info"
         ></el-alert>
         <div class="h10"></div>
-        <el-skeleton animated v-if="processing_active<3" >
+        <el-skeleton v-if="processing_active<3" animated >
           <template slot="template">
             <el-skeleton-item v-if="processing_active<1"  variant="p"/>
             <el-skeleton-item v-if="processing_active<2"  variant="p"/>
@@ -90,16 +91,16 @@
       <el-divider/>
     </div>
     <div slot="footer">
-      <el-button style="float: left" disabled>帮助?</el-button>
+      <el-button disabled style="float: left">帮助?</el-button>
       <el-button @click="cancelButtonClick">取 消</el-button>
-      <el-button type="primary" :loading="isProcessCloud" @click="doActiveCloudServerClicked">确 定</el-button>
+      <el-button :loading="isProcessCloud" type="primary" @click="doActiveCloudServerClicked">确 定</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
-import db_utils    from '../../libs/db_utils'
-import {Cons}      from '../../Constant'
+import {Cons} from '../../Constant'
 import {fetchPost} from '../../libs/axiosService'
+import db_utils from '../../libs/db_utils'
 
 export default {
   name: 'CloudProject',
@@ -170,6 +171,12 @@ export default {
         if (this.project.text2sqlId) {
           this.cloud_labels.push({_id:-400,name:'语义解析',type:Cons.WorkingType.TEXT2SQL,hidden:1})
         }
+      }
+    },
+    showDialog(newValue, oldValue){
+      if (newValue){
+        this.processing_active = 0
+        this.processCloudTipString = ''
       }
     }
   },
@@ -285,6 +292,7 @@ export default {
        this.doLocalSync(Cons.SyncLogType.PROJECT_DATAS,this.user_id,this.project._id, res2.data.updated_at,res2.data.version)
        this.doLocalSync(Cons.SyncLogType.PROJECT_BASIC,this.user_id,this.project._id, res3.data.updated_at,res3.data.version)
        // 关闭窗口,通知刷新
+       this.isProcessCloud = false
        this.$emit('syncFinish')
 
      },

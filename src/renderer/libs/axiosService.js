@@ -1,7 +1,6 @@
-import axios     from 'axios'
-import router    from '../router'
-import store     from '../store'
+import axios from 'axios'
 import {Message} from 'element-ui'
+import router from '../router'
 // import Urls from '../api/systemConfif.js'
 axios.defaults.timeout = 10000 //响应时间
 //axios.defaults.headers.post['Content-Type'] = 'application/json'; //配置请求头

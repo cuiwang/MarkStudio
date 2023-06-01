@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/datasmark_static_io.iml" filepath="$PROJECT_DIR$/.idea/datasmark_static_io.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MarkStudio.iml" filepath="$PROJECT_DIR$/.idea/MarkStudio.iml" />
     </modules>
   </component>
 </project>

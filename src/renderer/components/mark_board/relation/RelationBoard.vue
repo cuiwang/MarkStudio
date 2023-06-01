@@ -1,19 +1,19 @@
 <template>
-  <el-card class="relationMark_card" shadow="never" body-style="overflow:auto">
+  <el-card body-style="overflow:auto" class="relationMark_card" shadow="never">
     <div ref="relationMark_card_header" slot="header" class="clearfix relationMark_header">
       <div class="flex_row align_center">
         <div v-if="!selectedRelationType || !selectedRelationType.tag"
              class="flex_row relationMark_tips"
              style="height: 38px">
-          <el-alert effect="dark" title="没有选中标签" type="error" :closable="false" show-icon></el-alert>
+          <el-alert :closable="false" effect="dark" show-icon title="没有选中标签" type="error"></el-alert>
         </div>
         <div v-else-if="!booleanRelationMarkFinish" class="flex_row relationMark_tips">
-          <el-alert effect="dark" title="点击第一个" type="info" :closable="false" show-icon></el-alert>
+          <el-alert :closable="false" effect="dark" show-icon title="点击第一个" type="info"></el-alert>
         </div>
         <div v-else class="flex_row relationMark_tips">
-          <el-alert effect="dark" title="点击第一个" type="success" :closable="false" show-icon></el-alert>
+          <el-alert :closable="false" effect="dark" show-icon title="点击第一个" type="success"></el-alert>
           <div class="w10"></div>
-          <el-alert effect="dark" title="点击下一个" type="info" :closable="false" show-icon></el-alert>
+          <el-alert :closable="false" effect="dark" show-icon title="点击下一个" type="info"></el-alert>
         </div>
         <div class="w30"></div>
         <el-dropdown :disabled=" data.status !== DataType.MARKING">
@@ -22,10 +22,10 @@
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="onRelationTypeClick(item)"
-                              v-for="(item, index) in projectRelationType.datas"
-                              :key="`projectRelationType_${index}`">
-              <el-tag :color="item.color" size="medium" effect="dark">
+            <el-dropdown-item v-for="(item, index) in projectRelationType.datas"
+                              :key="`projectRelationType_${index}`"
+                              @click.native="onRelationTypeClick(item)">
+              <el-tag :color="item.color" effect="dark" size="medium">
                 {{item.tag}}
               </el-tag>
             </el-dropdown-item>
@@ -34,14 +34,14 @@
         <div class="flex_1"></div>
       </div>
     </div>
-    <div class="mark_relation_data" :style="data_style()">
+    <div :style="data_style()" class="mark_relation_data">
       <span v-for="(item, index) in relationItems" :key="`relationItems_${index}`">
-        <el-tag :color="item.data.color"
-                v-if="item.type === 'mark'"
-                effect="dark"
-                @click="onRelationItemClick(item, index)"
+        <el-tag v-if="item.type === 'mark'"
                 :id="`mark_index_${index}`"
-                type="primary">
+                :color="item.data.color"
+                effect="dark"
+                type="primary"
+                @click="onRelationItemClick(item, index)">
           {{item.content}}
           <span style="font-size: 9px">({{item.data.name}})</span>
         </el-tag>
@@ -51,8 +51,8 @@
   </el-card>
 </template>
 <script>
-import {Cons}            from '../../../Constant'
-import LeaderLine        from 'leader-line-new'
+import LeaderLine from 'leader-line-new'
+import {Cons} from '../../../Constant'
 import {sortArrayByProp} from '../../../libs/utils'
 
 export default {
@@ -94,6 +94,7 @@ export default {
       DataType: Cons.DataType,
       defaultFontSize: '1.2rem',
       defaultFontColor: '#333333',
+      defaultDuration:1200,
       //
       relationItems: [], //处理后的关系标注数据
       booleanCloseLeaderLine: false, //是否关闭连线
@@ -151,6 +152,7 @@ export default {
     initData(){
       this.defaultFontSize = localStorage.getItem('defaultFontSize') || '1.2rem'
       this.defaultFontColor = localStorage.getItem('defaultFontColor') || '#333333'
+      this.defaultDuration = localStorage.getItem('defaultDuration') || 1200
       this.booleanCloseLeaderLine = localStorage.getItem('booleanCloseLeaderLine') === '1'
       this.renderLines()
     },
@@ -325,8 +327,7 @@ export default {
     doShowRelationLine(index) {
       if (this.relationLines[index]){
         this.relationLines[index].show('draw', {
-          duration: 1200,
-          timing: [0.2, 0.2, 0.6, 0.2]
+          duration: this.defaultDuration
         })
       }
     },
@@ -356,7 +357,7 @@ export default {
   }
 }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .mark_relation_data {
   color: #333333;
   padding: 20px;
