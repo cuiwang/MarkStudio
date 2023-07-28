@@ -1032,9 +1032,6 @@ export default {
       db_utils.find(db_utils.DATAS_DB,{},(err,documents)=>{
         console.log(documents);
       })*/
-      db_utils.find(db_utils.DATAS_DB,{},(err,documents)=>{
-        console.log(documents);
-      })
       // 默认标注组,保存到数据库
       db_utils.find(db_utils.LABELS_DB, {}, (err, documents) => {
         // 判断是否3.0以前的数据,需要迁移,只会迁移这一次.
