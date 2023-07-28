@@ -14,7 +14,7 @@ export function getNumFromProject(project){
   }
   // 读取datas库
   return new Promise((resolve, reject) => {
-    project.project_id = project.project_id || project._id
+    project.project_id = project._id
     db_utils.count(db_utils.DATAS_DB,{project_id:project.project_id},(err, count) => {
       if (count){
         num.total = count

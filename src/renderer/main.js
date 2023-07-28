@@ -1,4 +1,3 @@
-import {dragMixin} from '/libs/disableDragMixin'
 import * as dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn' // import locale
 import * as relativeTime from 'dayjs/plugin/relativeTime' // import plugin
@@ -21,7 +20,7 @@ Vue.use(ElementUI);
 Vue.prototype.$events = new EventEmitter();
 Vue.config.productionTip = false;
 Vue.mixin({
-  mixins: [mixin,dragMixin],
+  mixins: [mixin],
 })
 
 /*

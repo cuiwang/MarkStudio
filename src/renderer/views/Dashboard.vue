@@ -503,7 +503,7 @@ export default {
       db_utils.findOne(db_utils.PROJECTS_DB, {working: true}, (err, document) => {
         if (!err && document) {
           // 保存项目信息
-          document.project_id = document.project_id || document._id
+          document.project_id = document._id
           this.project = document
           // 读取项目进度
           getNumFromProject(this.project).then(num=>{
