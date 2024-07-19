@@ -8,13 +8,18 @@ MarkStudio现提供两个版本：2.x离线版和最新的3.x云服务版。
 ----
 #### 推荐使用3.x云服务版
 
-[http://ms.youdongtai.com/](http://ms.youdongtai.com/)
+[http://ms.oneoneone.cn/](http://ms.oneoneone.cn/)
 - 1.支持多人协同标注。
 - 2.支持数据备份和恢复。
 - 3.支持数据分享和下载。
 - ~~4.支持插件开发。~~（开发中）
 - ~~5.开发api接口,提供在线学习功能辅助标注~~。开发中）
 
+#### 示例图片
+![](https://datasmark.oneoneone.cn/images/1.png)|![](https://datasmark.oneoneone.cn/images/2.png)|![](https://datasmark.oneoneone.cn/images/3.png)
+---|---|---
+![](https://datasmark.oneoneone.cn/images/4.png)|![](https://datasmark.oneoneone.cn/images/5.png)|![](https://datasmark.oneoneone.cn/images/6.png)
+![](https://datasmark.oneoneone.cn/images/1-1.png)|![](https://datasmark.oneoneone.cn/images/2-1.png)|![](https://datasmark.oneoneone.cn/images/3-1.png)
 #### 离线版主要应用架构
 * Vue2.x 用于前端渲染
 * element 用于UI组件
@@ -31,11 +36,6 @@ MarkStudio现提供两个版本：2.x离线版和最新的3.x云服务版。
 2. npm或yarn run dev 开发调试
 3. npm或yarn run build:dir 生成绿色版本
 4. npm或yarn run build 生成完整版本
-
-#### 已知编译问题
-1. Uncaught Exception:Error Cannot find module 'fs/promises'
-  修改AppUpdater.js 文件中的第 8 行，修改成 `const promises_1 = require("fs").promises;`
-  <img width="352" alt="image" src="https://user-images.githubusercontent.com/4076242/202989579-bb339177-10db-45e8-bbc4-60dc823642a2.png">
 
 
 #### 使用说明
