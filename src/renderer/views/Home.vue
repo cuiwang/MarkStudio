@@ -1234,7 +1234,7 @@ export default {
     // 初始化weosocket
     initWebSocket() {
       console.log('启动中')
-      const wsurl = 'ws://ms-server.youdongtai.com'
+      const wsurl = 'ws://ms-server.oneoneone.cn'
       this.doCloseWebsocket()
       //const wsurl = 'ws://wxsocket.youdongtai.com'
       // const wsurl = 'ws://server.natappfree.cc:39217'

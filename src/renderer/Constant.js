@@ -1,5 +1,5 @@
 export const Cons = {
-  BASE_URL:'http://ms.youdongtai.com',
+  BASE_URL:'http://ms.oneoneone.cn',
   WorkingType: {
     ENTITY: 0, //实体标注
     RELATION: 1, //关系标注

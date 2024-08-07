@@ -1,9 +1,9 @@
 {
   "name": "markstudio",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "author": "Choi Wan <1991.cuiwang@gmail.com>",
   "description": "一个简洁的开源数据标注工具",
-  "homepage": "http://ms.youdongtai.com",
+  "homepage": "http://ms.oneoneone.cn",
   "license": "MIT",
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "appId": "cn.developer.cuiwang.datasmark",
     "publish": {
       "provider": "generic",
-      "url": "http://datasmark.youdongtai.com/files/"
+      "url": "http://datasmark.oneoneone.com/files/"
     },
     "directories": {
       "output": "build"

@@ -6,7 +6,7 @@ axios.defaults.timeout = 10000 //响应时间
 //axios.defaults.headers.post['Content-Type'] = 'application/json'; //配置请求头
 //axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'; //配置请求头
 //axios.defaults.baseURL = 'http://markstudio:7888' //配置接口地址
-axios.defaults.baseURL = 'http://ms.youdongtai.com' //配置接口地址
+axios.defaults.baseURL = 'http://ms.oneoneone.cn' //配置接口地址
 //来判断是否开发环境
 // if (process.env.NODE_ENV === 'development') {
 //     axios.defaults.baseURL = Urls.baseurl.value; //配置接口地址

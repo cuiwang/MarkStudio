@@ -147,8 +147,8 @@
               </div>
               <div class="normal_text_size main_text_color padding_10">
                 最新安装包地址:
-                <el-link href="http://ms.youdongtai.com/"
-                         target="_blank">http://ms.youdongtai.com
+                <el-link href="http://ms.oneoneone.cn/"
+                         target="_blank">http://ms.oneoneone.cn
                 </el-link>
               </div>
             </el-card>
